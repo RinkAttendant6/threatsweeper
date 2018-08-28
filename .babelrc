@@ -1,23 +1,15 @@
 {
     "plugins": [
-        "syntax-jsx",
-        "transform-class-properties",
-        "transform-react-jsx",
-        "transform-react-display-name"
+        "@babel/plugin-proposal-class-properties"
     ],
-    "presets": [[
-        "env",
-        {
-            "targets": {
-                "browsers": [
-                    "chrome >= 61",
-                    "opera >= 48",
-                    "edge >= 16",
-                    "firefox >= 60",
-                    "iOS >= 11"
-                ]
-            },
-            "useBuiltins": true
-        }
-    ]]
+    "presets": [
+        "@babel/preset-react",
+        [
+            "@babel/preset-env",
+            {
+                "useBuiltIns": "entry",
+                "modules": false
+            }
+        ]
+    ]
 }
