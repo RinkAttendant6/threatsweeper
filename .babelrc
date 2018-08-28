@@ -1,0 +1,23 @@
+{
+    "plugins": [
+        "syntax-jsx",
+        "transform-class-properties",
+        "transform-react-jsx",
+        "transform-react-display-name"
+    ],
+    "presets": [[
+        "env",
+        {
+            "targets": {
+                "browsers": [
+                    "chrome >= 61",
+                    "opera >= 48",
+                    "edge >= 16",
+                    "firefox >= 60",
+                    "iOS >= 11"
+                ]
+            },
+            "useBuiltins": true
+        }
+    ]]
+}
