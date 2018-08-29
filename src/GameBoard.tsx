@@ -1,13 +1,27 @@
 import React from 'react';
 import Square from './Square';
+import SquareDataInterface from './interfaces/SquareDataInterface';
 
-export default class GameBoard extends React.Component {
+export interface Props {
+    squares: SquareDataInterface[][];
+
+    isGameActive: boolean;
+
+    handleSquareClick: (e: React.MouseEvent, x: number, y: number) => void;
+    handleSquareRightClick: (e: React.MouseEvent, x: number, y: number) => void;
+    handleSquareDoubleClick: (x: number, y: number) => void;
+}
+
+/**
+ * Class representing the game board
+ */
+export default class GameBoard extends React.Component<Props> {
     render() {
         return (
             <table>
                 <tbody>
                     {
-                        this.props.squares[0].map((row, y) =>
+                        this.props.squares[0].map((_row, y) =>
                             <tr key={y}>
                                 {
                                     this.props.squares.map((_, x) =>

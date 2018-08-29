@@ -1,8 +1,25 @@
 import React from 'react';
 import GameBoard from './GameBoard';
+import SquareDataInterface from "./interfaces/SquareDataInterface";
 
-export default class Game extends React.Component {
-    constructor(props) {
+export interface Props {
+    width: number;
+    height: number;
+    mines: number;
+}
+
+export interface State {
+    squares: SquareDataInterface[][];
+    mines: Set<string>;
+    won: boolean;
+    lost: boolean;
+}
+
+/**
+ * Class representing the game
+ */
+export default class Game extends React.Component<Props, State> {
+    constructor(props: Props) {
         super(props);
 
         this.state = {
@@ -15,12 +32,10 @@ export default class Game extends React.Component {
 
     /**
      * Initialize the array that holds all information about the squares on the game board
-     * @param {Set} mines
-     * @returns {Object<string, *>[][]}
      */
-    initializeSquaresArray(mines) {
+    initializeSquaresArray(mines: Set<string>): SquareDataInterface[][] {
         let {width, height} = this.props;
-        let squares = [];
+        let squares: SquareDataInterface[][] = [];
 
         for (let i = 0; i < width; ++i) {
             squares[i] = [];
@@ -38,12 +53,8 @@ export default class Game extends React.Component {
 
     /**
      * Determine the number of surrounding mines for a given square
-     * @param {Set} mines
-     * @param {number} x
-     * @param {number} y
-     * @returns {number}
      */
-    computeSurroundingMines(mines, x, y) {
+    computeSurroundingMines(mines: Set<string>, x: number, y: number): number {
         if (mines.has(x + ',' + y)) {
             return -1;
         }
@@ -59,16 +70,16 @@ export default class Game extends React.Component {
             [x + 1, y + 1]
         ];
 
-        return choices.reduce((acc, [v, h]) => {
+        return choices.reduce((acc: number, [v, h]) => {
             const inBounds = v >= 0 && v < this.props.width && h >= 0 && h < this.props.height;
-            return acc + (inBounds ? mines.has(v + ',' + h) : 0);
+            return acc + (inBounds ? Number(mines.has(v + ',' + h)) : 0);
         }, 0);
     }
 
     /**
      * Starts a new game
      */
-    startNewGame() {
+    startNewGame(): void {
         const mines = this.generateMines();
         const squares = this.initializeSquaresArray(mines);
 
@@ -86,9 +97,8 @@ export default class Game extends React.Component {
 
     /**
      * Generates a set of mines
-     * @returns {Set<any>}
      */
-    generateMines() {
+    generateMines(): Set<string> {
         let mines = new Set();
 
         while (mines.size < this.props.mines) {
@@ -103,24 +113,21 @@ export default class Game extends React.Component {
     /**
      * Handles winning game event
      */
-    handleGameWin() {
+    handleGameWin(): void {
         this.setState({won: true});
     }
 
     /**
      * Handles losing game event
      */
-    handleGameLose() {
+    handleGameLose(): void {
         this.setState({lost: true});
     }
 
     /**
      * Handles the click event of a square
-     * @param {Event} event
-     * @param {number} x
-     * @param {number} y
      */
-    handleSquareClick(event, x, y) {
+    handleSquareClick(event: React.MouseEvent<HTMLElement>, x: number, y: number): void {
         if (event.nativeEvent.which !== 1 || this.state.squares[x][y].displayState !== 'covered') {
             // Not left click or clicked on invalid square
             return;
@@ -152,13 +159,8 @@ export default class Game extends React.Component {
 
     /**
      * Reveals adjacent squares
-     * @param {Object<string, *>[][]} squares
-     * @param {number} x
-     * @param {number} y
-     * @returns {Object<string, *>[][]}
-     * @private
      */
-    _revealAdjacentSquares(squares, x, y) {
+    private _revealAdjacentSquares(squares: SquareDataInterface[][], x: number, y: number): SquareDataInterface[][] {
         const choices = [
             [x - 1, y - 1],
             [x - 1, y ],
@@ -188,11 +190,8 @@ export default class Game extends React.Component {
 
     /**
      * Handles the right-click event of a square
-     * @param {Event} event
-     * @param {number} x
-     * @param {number} y
      */
-    handleSquareRightClick(event, x, y) {
+    handleSquareRightClick(event: React.MouseEvent<HTMLElement>, x: number, y: number): void {
         event.preventDefault();
 
         let newSquareState;
@@ -219,10 +218,8 @@ export default class Game extends React.Component {
 
     /**
      * Handles the double-click event of a square
-     * @param {number} x
-     * @param {number} y
      */
-    handleSquareDoubleClick(x, y) {
+    handleSquareDoubleClick(x: number, y: number): void {
         // TODO handle double click to reveal squares
         console.log('Double clicked on square %d %d', x, y);
     }
@@ -241,8 +238,6 @@ export default class Game extends React.Component {
                 New game
             </button>
             <GameBoard
-                width={this.props.width}
-                height={this.props.width}
                 squares={this.state.squares}
                 handleSquareClick={this.handleSquareClick.bind(this)}
                 handleSquareRightClick={this.handleSquareRightClick.bind(this)}

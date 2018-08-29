@@ -1,0 +1,23 @@
+{
+    "compilerOptions": {
+        "allowSyntheticDefaultImports": true,
+        "alwaysStrict": true,
+        "forceConsistentCasingInFileNames": true,
+        "jsx": "react",
+        "module": "es2015",
+        "moduleResolution": "node",
+        "newLine": "lf",
+        "noFallthroughCasesInSwitch": true,
+        "noImplicitAny": true,
+        "noImplicitReturns": true,
+        "noImplicitThis": true,
+        "noUnusedParameters": true,
+        "removeComments": true,
+        "outDir": "./dist/",
+        "sourceMap": true,
+        "strictFunctionTypes": true,
+        "strictNullChecks": true,
+        "strictPropertyInitialization": true,
+        "target": "es2018"
+    }
+}

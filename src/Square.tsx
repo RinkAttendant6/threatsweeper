@@ -1,15 +1,30 @@
 import React from 'react';
 
-export default class Square extends React.PureComponent {
+export interface Props {
+    x: number;
+    y: number;
+    gameInProgress: boolean;
+
+    squareState: {displayState: string, surroundingMines: number};
+
+    onClick: (e: React.MouseEvent<HTMLElement>) => void;
+    onRightClick: (e: React.MouseEvent<HTMLElement>) => void;
+    onDoubleClick: (e?: React.MouseEvent<HTMLElement>) => void;
+}
+
+/**
+ * Class representing a square on the game board
+ */
+export default class Square extends React.PureComponent<Props> {
     render() {
-        let contents = ' ';
-        let colour = 'skyblue';
+        let contents: string = ' ';
+        let colour: string = 'skyblue';
 
         switch (this.props.squareState.displayState) {
             case 'covered':
                 break;
             case 'uncovered':
-                contents = this.props.squareState.surroundingMines || ' ';
+                contents = String(this.props.squareState.surroundingMines || ' ');
                 colour = 'white';
                 break;
             case 'flagged':
