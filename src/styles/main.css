@@ -1,14 +1,15 @@
 html {
     font-family: sans-serif;
+    background-image: radial-gradient(#fffde4, #cff);
 }
 
 table {
     margin: 1em auto;
+    border-spacing: 0.25em;
+    background-color: rgba(255, 255, 255, 0.2);
 }
 
 td {
-    border: thin solid gray;
-    border-radius: 2px;
     width: 1cm;
     height: 1cm;
     text-align: center;
@@ -19,19 +20,42 @@ td {
 }
 
 td button {
+    border: thin solid #ccc;
+    border-radius: 2px;
     font-size: 1.5em;
     padding: 0.25rem;
     height: 100%;
     width: 100%;
     background-color: transparent;
     color: inherit;
-    border: 0;
 }
 
 td button:enabled {
     cursor: pointer;
 }
 
-td button:disabled {
-    opacity: inherit;
+td button:empty:disabled {
+    box-shadow: none;
+}
+
+td button:disabled:not(:empty) {
+    border-color: #999;
+}
+
+.covered button {
+    background: radial-gradient(#fceabb, #f8b500) no-repeat;
+    box-shadow: 1px 1px #333;
+}
+
+.maybe button {
+    background: radial-gradient(#56ab2f, #a8e063) no-repeat;
+}
+
+.flagged button {
+    color: white;
+    background: radial-gradient(#5d1674, #2f0047) no-repeat;
+}
+
+.detonated button {
+    background-color: red;
 }

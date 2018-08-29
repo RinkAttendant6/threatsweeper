@@ -18,31 +18,31 @@ export interface Props {
 export default class Square extends React.PureComponent<Props> {
     render() {
         let contents: string = ' ';
-        let colour: string = 'skyblue';
+        let className: string = 'covered';
 
         switch (this.props.squareState.displayState) {
             case 'covered':
                 break;
             case 'uncovered':
-                contents = String(this.props.squareState.surroundingMines || ' ');
-                colour = 'white';
+                contents = String(this.props.squareState.surroundingMines || '');
+                className = '';
                 break;
             case 'flagged':
                 contents = 'F';
-                colour = 'yellow';
+                className = 'flagged';
                 break;
             case 'maybe':
                 contents = '?';
-                colour = 'lime';
+                className = 'maybe';
                 break;
             case 'detonated':
                 contents = 'X';
-                colour = 'black';
+                className = 'detonated';
                 break;
         }
 
         return (
-            <td key={this.props.x + ' ' + this.props.y} style={{backgroundColor: colour}}>
+            <td key={this.props.x + ' ' + this.props.y} className={className}>
                 <button type='button'
                         disabled={!this.props.gameInProgress || ['uncovered', 'detonated'].includes(this.props.squareState.displayState)}
                         onClick={this.props.gameInProgress ? this.props.onClick : undefined}

@@ -237,6 +237,12 @@ export default class Game extends React.Component<Props, State> {
             <button type='button' disabled={isGameInProgress} onClick={() => this.startNewGame()}>
                 New game
             </button>
+            <div className='header'>
+                <div>
+                    <p>Mines: {this.state.mines.size}</p>
+                </div>
+                <div />
+            </div>
             <GameBoard
                 squares={this.state.squares}
                 handleSquareClick={this.handleSquareClick.bind(this)}
@@ -244,7 +250,6 @@ export default class Game extends React.Component<Props, State> {
                 handleSquareDoubleClick={this.handleSquareDoubleClick.bind(this)}
                 isGameActive={isGameInProgress}
             />
-            <p>Mines: {this.state.mines.size}</p>
             <p>Squares: </p>
         </React.Fragment>;
     }
