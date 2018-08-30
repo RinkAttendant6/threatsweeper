@@ -10,6 +10,7 @@ table {
 }
 
 td {
+    min-width: 1cm;
     width: 1cm;
     height: 1cm;
     text-align: center;
@@ -40,6 +41,10 @@ td button:empty:disabled {
 
 td button:disabled:not(:empty) {
     border-color: #999;
+}
+
+td svg {
+    vertical-align: middle;
 }
 
 .covered button {

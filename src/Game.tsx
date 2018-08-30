@@ -1,6 +1,6 @@
 import React from 'react';
 import GameBoard from './GameBoard';
-import SquareDataInterface from "./interfaces/SquareDataInterface";
+import SquareDataInterface, {DisplayState} from "./interfaces/SquareDataInterface";
 
 export interface Props {
     width: number;
@@ -43,7 +43,7 @@ export default class Game extends React.Component<Props, State> {
             for (let j = 0; j < height; ++j) {
                 squares[i][j] = {
                     surroundingMines: this.computeSurroundingMines(mines, i, j),
-                    displayState: 'covered'
+                    displayState: DisplayState.Covered
                 };
             }
         }
@@ -128,7 +128,7 @@ export default class Game extends React.Component<Props, State> {
      * Handles the click event of a square
      */
     handleSquareClick(event: React.MouseEvent<HTMLElement>, x: number, y: number): void {
-        if (event.nativeEvent.which !== 1 || this.state.squares[x][y].displayState !== 'covered') {
+        if (event.nativeEvent.which !== 1 || this.state.squares[x][y].displayState !== DisplayState.Covered) {
             // Not left click or clicked on invalid square
             return;
         }
@@ -136,18 +136,18 @@ export default class Game extends React.Component<Props, State> {
         let newSquares = this.state.squares.slice();
 
         const surroundingMines = this.state.squares[x][y].surroundingMines
-        const newState = surroundingMines === -1 ? 'detonated' : 'uncovered';
+        const newState: DisplayState = surroundingMines === -1 ? DisplayState.Detonated : DisplayState.Uncovered;
 
         newSquares[x][y].displayState = newState;
 
-        if (newState === 'uncovered' && surroundingMines === 0) {
+        if (newState === DisplayState.Uncovered && surroundingMines === 0) {
             newSquares = this._revealAdjacentSquares(newSquares, x, y);
         }
 
         if (surroundingMines === -1) {
             this.handleGameLose();
         } else {
-            const won = this.state.squares.every(column => column.every(s => s.displayState === 'uncovered' || s.surroundingMines === -1));
+            const won = this.state.squares.every(column => column.every(s => s.displayState === DisplayState.Uncovered || s.surroundingMines === -1));
 
             if (won) {
                 this.handleGameWin();
@@ -174,11 +174,11 @@ export default class Game extends React.Component<Props, State> {
 
         const coveredAdjacentSquares = choices.filter(([v, h]) => {
             const inBounds = v >= 0 && v < this.props.width && h >= 0 && h < this.props.height;
-            return inBounds && squares[v][h].displayState === 'covered';
+            return inBounds && squares[v][h].displayState === DisplayState.Covered;
         });
 
         for (let [v, h] of coveredAdjacentSquares) {
-            squares[v][h].displayState = 'uncovered';
+            squares[v][h].displayState = DisplayState.Uncovered;
 
             if (squares[v][h].surroundingMines === 0) {
                 this._revealAdjacentSquares(squares, v, h);
@@ -194,21 +194,21 @@ export default class Game extends React.Component<Props, State> {
     handleSquareRightClick(event: React.MouseEvent<HTMLElement>, x: number, y: number): void {
         event.preventDefault();
 
-        let newSquareState;
-        switch (this.state.squares[x][y].displayState) {
-            case 'uncovered':
-                // Right clicking an exposed square shouldn't do anything
-                return;
-            case 'covered':
-                newSquareState = 'flagged';
-                break;
-            case 'flagged':
-                newSquareState = 'maybe';
-                break;
-            default:
-                newSquareState = 'covered';
-                break;
+        const stateTransitions: DisplayState[] = [
+            DisplayState.Covered,
+            DisplayState.Flagged,
+            DisplayState.Maybe
+        ];
+
+        let currentSquareStateIdx = stateTransitions.indexOf(this.state.squares[x][y].displayState);
+
+        if (currentSquareStateIdx < 0) {
+            // Right-clicking shouldn't do anything
+            return;
         }
+
+        let newSquareStateIdx: number = (currentSquareStateIdx + 1) % stateTransitions.length;
+        let newSquareState: DisplayState = stateTransitions[newSquareStateIdx];
 
         let newSquares = this.state.squares.slice();
         newSquares[x][y].displayState = newSquareState;

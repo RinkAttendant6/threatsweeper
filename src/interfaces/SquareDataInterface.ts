@@ -1,4 +1,12 @@
+export enum DisplayState {
+    Covered = "COVERED",
+    Uncovered = "UNCOVERED",
+    Flagged = "FLAGGED",
+    Detonated = "DETONATED",
+    Maybe = "MAYBE"
+}
+
 export default interface SquareDataInterface {
-    displayState: string;
+    displayState: DisplayState;
     surroundingMines: number;
 }
