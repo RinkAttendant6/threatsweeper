@@ -226,22 +226,18 @@ export default class Game extends React.Component<Props, State> {
 
     render() {
         const isGameInProgress = !this.state.won && !this.state.lost;
+        const numberOfFlags = this.state.squares.reduce((acc, column): number => {
+            return acc + column.reduce((acc, cell): number => {
+                return acc + Number(cell.displayState === DisplayState.Flagged);
+            }, 0);
+        }, 0);
 
-        return <React.Fragment>
-            {
-                this.state.won && <p>Congratulations!</p>
-            }
-            {
-                this.state.lost && <p>Better luck next time! </p>
-            }
+        return <>
             <button type='button' disabled={isGameInProgress} onClick={() => this.startNewGame()}>
                 New game
             </button>
-            <div className='header'>
-                <div>
-                    <p>Mines: {this.state.mines.size}</p>
-                </div>
-                <div />
+            <div className='header' style={{textAlign: 'center'}}>
+                <p>Flags: {numberOfFlags} / {this.state.mines.size}</p>
             </div>
             <GameBoard
                 squares={this.state.squares}
@@ -250,7 +246,12 @@ export default class Game extends React.Component<Props, State> {
                 handleSquareDoubleClick={this.handleSquareDoubleClick.bind(this)}
                 isGameActive={isGameInProgress}
             />
-            <p>Squares: </p>
-        </React.Fragment>;
+            {
+                this.state.won && <p>Congratulations!</p>
+            }
+            {
+                this.state.lost && <p>Better luck next time! </p>
+            }
+        </>;
     }
 }
