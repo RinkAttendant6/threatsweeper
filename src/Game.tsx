@@ -11,6 +11,7 @@ export interface Props {
 export interface State {
     squares: SquareDataInterface[][];
     mines: Set<string>;
+    timer: number;
     won: boolean;
     lost: boolean;
 }
@@ -19,12 +20,17 @@ export interface State {
  * Class representing the game
  */
 export default class Game extends React.Component<Props, State> {
+    private timerID: number|null;
+
     constructor(props: Props) {
         super(props);
+
+        this.timerID = null;
 
         this.state = {
             squares: [[]],
             mines: new Set(),
+            timer: 0,
             won: false,
             lost: false
         };
@@ -80,12 +86,17 @@ export default class Game extends React.Component<Props, State> {
      * Starts a new game
      */
     startNewGame(): void {
+        this.stopTimer();
+
         const mines = this.generateMines();
         const squares = this.initializeSquaresArray(mines);
+
+        this.startTimer();
 
         this.setState({
             squares: squares,
             mines: mines,
+            timer: 0,
             won: false,
             lost: false
         });
@@ -93,6 +104,10 @@ export default class Game extends React.Component<Props, State> {
 
     componentDidMount() {
         this.startNewGame();
+    }
+
+    componentWillUnmount() {
+        this.stopTimer();
     }
 
     /**
@@ -111,9 +126,33 @@ export default class Game extends React.Component<Props, State> {
     }
 
     /**
+     * Starts a timer
+     */
+    startTimer() {
+        this.timerID = window.setInterval(
+            () => this.tick(),
+            1000
+        )
+    }
+
+    /**
+     * Stops a timer
+     */
+    stopTimer() {
+        if (this.timerID !== null) {
+            window.clearInterval(this.timerID);
+        }
+    }
+
+    private tick() {
+        this.setState((prevState => this.setState({timer: prevState.timer + 1})));
+    }
+
+    /**
      * Handles winning game event
      */
     handleGameWin(): void {
+        this.stopTimer();
         this.setState({won: true});
     }
 
@@ -121,6 +160,7 @@ export default class Game extends React.Component<Props, State> {
      * Handles losing game event
      */
     handleGameLose(): void {
+        this.stopTimer();
         this.setState({lost: true});
     }
 
@@ -237,6 +277,7 @@ export default class Game extends React.Component<Props, State> {
                 New game
             </button>
             <div className='header' style={{textAlign: 'center'}}>
+                <p>Time: {this.state.timer} seconds</p>
                 <p>Flags: {numberOfFlags} / {this.state.mines.size}</p>
             </div>
             <GameBoard
