@@ -1,9 +1,11 @@
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const path = require('path');
 const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
 const SriPlugin = require('webpack-subresource-integrity');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const webpack = require('webpack');
 
 module.exports = (env, argv) => {
@@ -44,6 +46,14 @@ module.exports = (env, argv) => {
         },
         optimization: {
             minimize: isProductionBuild,
+            minimizer: [
+                new UglifyJsPlugin({
+                    cache: true,
+                    parallel: true,
+                    sourceMap: true
+                }),
+                new OptimizeCSSAssetsPlugin({})
+            ],
             splitChunks: {
                 cacheGroups: {
                     vendor: {
@@ -73,12 +83,13 @@ module.exports = (env, argv) => {
             }),
             new ScriptExtHtmlWebpackPlugin({
                 defaultAttribute: 'defer',
-                module: 'index.js'
+                module: 'main.js'
             }),
             new SriPlugin({
                 hashFuncNames: ['sha256', 'sha384'],
                 enabled: isProductionBuild,
             }),
+            new webpack.optimize.ModuleConcatenationPlugin(),
             !isProductionBuild && new webpack.HotModuleReplacementPlugin(),
         ].filter(Boolean),
         resolve: {

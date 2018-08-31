@@ -76,7 +76,7 @@ export default class Game extends React.Component<Props, State> {
             [x + 1, y + 1]
         ];
 
-        return choices.reduce((acc: number, [v, h]) => {
+        return choices.reduce((acc: number, [v, h]): number => {
             const inBounds = v >= 0 && v < this.props.width && h >= 0 && h < this.props.height;
             return acc + (inBounds ? Number(mines.has(v + ',' + h)) : 0);
         }, 0);
