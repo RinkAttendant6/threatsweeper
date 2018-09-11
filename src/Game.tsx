@@ -1,19 +1,24 @@
 import React from 'react';
 import GameBoard from './GameBoard';
+import GameLevelInterface from './interfaces/GameLevelInterface';
+import Levels from './Levels';
+import LevelSelectorDialog from './LevelSelectorDialog';
+import Modal from 'react-modal';
 import SquareDataInterface, {DisplayState} from "./interfaces/SquareDataInterface";
 
 export interface Props {
-    width: number;
-    height: number;
-    mines: number;
 }
 
 export interface State {
+    level: GameLevelInterface;
+
     squares: SquareDataInterface[][];
     mines: Set<string>;
     timer: number;
     won: boolean;
     lost: boolean;
+
+    newGameDialogOpen: boolean;
 }
 
 /**
@@ -28,11 +33,13 @@ export default class Game extends React.Component<Props, State> {
         this.timerID = null;
 
         this.state = {
+            level: Levels.EASY,
             squares: [[]],
             mines: new Set(),
             timer: 0,
             won: false,
-            lost: false
+            lost: false,
+            newGameDialogOpen: false
         };
     }
 
@@ -40,7 +47,7 @@ export default class Game extends React.Component<Props, State> {
      * Initialize the array that holds all information about the squares on the game board
      */
     initializeSquaresArray(mines: Set<string>): SquareDataInterface[][] {
-        let {width, height} = this.props;
+        let {width, height} = this.state.level;
         let squares: SquareDataInterface[][] = [];
 
         for (let i = 0; i < width; ++i) {
@@ -76,8 +83,10 @@ export default class Game extends React.Component<Props, State> {
             [x + 1, y + 1]
         ];
 
+        const {width, height} = this.state.level;
+
         return choices.reduce((acc: number, [v, h]): number => {
-            const inBounds = v >= 0 && v < this.props.width && h >= 0 && h < this.props.height;
+            const inBounds = v >= 0 && v < width && h >= 0 && h < height;
             return acc + (inBounds ? Number(mines.has(v + ',' + h)) : 0);
         }, 0);
     }
@@ -85,20 +94,23 @@ export default class Game extends React.Component<Props, State> {
     /**
      * Starts a new game
      */
-    startNewGame(): void {
+    startNewGame(level: GameLevelInterface = Levels.EASY): void {
         this.stopTimer();
 
-        const mines = this.generateMines();
-        const squares = this.initializeSquaresArray(mines);
+        this.setState({level}, () => {
+            const mines = this.generateMines();
+            const squares = this.initializeSquaresArray(mines);
 
-        this.startTimer();
+            this.setState({
+                squares,
+                mines,
+                timer: 0,
+                won: false,
+                lost: false,
+                newGameDialogOpen: false
+            });
 
-        this.setState({
-            squares: squares,
-            mines: mines,
-            timer: 0,
-            won: false,
-            lost: false
+            this.startTimer();
         });
     }
 
@@ -114,11 +126,12 @@ export default class Game extends React.Component<Props, State> {
      * Generates a set of mines
      */
     generateMines(): Set<string> {
+        const {width, height} = this.state.level;
         let mines = new Set();
 
-        while (mines.size < this.props.mines) {
-            let x = Math.floor(Math.random() * Math.floor(this.props.width));
-            let y = Math.floor(Math.random() * Math.floor(this.props.height));
+        while (mines.size < this.state.level.mines) {
+            let x = Math.floor(Math.random() * Math.floor(width));
+            let y = Math.floor(Math.random() * Math.floor(height));
             mines.add(x + ',' + y);
         }
 
@@ -151,23 +164,23 @@ export default class Game extends React.Component<Props, State> {
     /**
      * Handles winning game event
      */
-    handleGameWin(): void {
+    handleGameWin = (): void => {
         this.stopTimer();
         this.setState({won: true});
-    }
+    };
 
     /**
      * Handles losing game event
      */
-    handleGameLose(): void {
+    handleGameLose = (): void => {
         this.stopTimer();
         this.setState({lost: true});
-    }
+    };
 
     /**
      * Handles the click event of a square
      */
-    handleSquareClick(event: React.MouseEvent<HTMLElement>, x: number, y: number): void {
+    handleSquareClick = (event: React.MouseEvent<HTMLElement>, x: number, y: number): void => {
         if (event.nativeEvent.which !== 1 || this.state.squares[x][y].displayState !== DisplayState.Covered) {
             // Not left click or clicked on invalid square
             return;
@@ -195,12 +208,14 @@ export default class Game extends React.Component<Props, State> {
         }
 
         this.setState({squares: newSquares});
-    }
+    };
 
     /**
      * Reveals adjacent squares
      */
     private _revealAdjacentSquares(squares: SquareDataInterface[][], x: number, y: number): SquareDataInterface[][] {
+        const {width, height} = this.state.level;
+
         const choices = [
             [x - 1, y - 1],
             [x - 1, y ],
@@ -213,7 +228,7 @@ export default class Game extends React.Component<Props, State> {
         ];
 
         const coveredAdjacentSquares = choices.filter(([v, h]) => {
-            const inBounds = v >= 0 && v < this.props.width && h >= 0 && h < this.props.height;
+            const inBounds = v >= 0 && v < width && h >= 0 && h < height;
             return inBounds && squares[v][h].displayState === DisplayState.Covered;
         });
 
@@ -231,7 +246,7 @@ export default class Game extends React.Component<Props, State> {
     /**
      * Handles the right-click event of a square
      */
-    handleSquareRightClick(event: React.MouseEvent<HTMLElement>, x: number, y: number): void {
+    handleSquareRightClick = (event: React.MouseEvent<HTMLElement>, x: number, y: number): void => {
         event.preventDefault();
 
         const stateTransitions: DisplayState[] = [
@@ -254,15 +269,29 @@ export default class Game extends React.Component<Props, State> {
         newSquares[x][y].displayState = newSquareState;
 
         this.setState({squares: newSquares});
-    }
+    };
 
     /**
      * Handles the double-click event of a square
      */
-    handleSquareDoubleClick(x: number, y: number): void {
+    handleSquareDoubleClick = (x: number, y: number): void => {
         // TODO handle double click to reveal squares
         console.log('Double clicked on square %d %d', x, y);
-    }
+    };
+
+    /**
+     * Handles clicking the new game button
+     */
+    handleNewGameClick = (): void => {
+        this.setState({newGameDialogOpen: true});
+    };
+
+    /**
+     * Handles closing the new game modal
+     */
+    handleModalClose = (): void => {
+        this.setState({newGameDialogOpen: false});
+    };
 
     render() {
         const isGameInProgress = !this.state.won && !this.state.lost;
@@ -273,7 +302,7 @@ export default class Game extends React.Component<Props, State> {
         }, 0);
 
         return <>
-            <button type='button' disabled={isGameInProgress} onClick={() => this.startNewGame()}>
+            <button type='button' onClick={this.handleNewGameClick}>
                 New game
             </button>
             <div className='header' style={{textAlign: 'center'}}>
@@ -282,9 +311,9 @@ export default class Game extends React.Component<Props, State> {
             </div>
             <GameBoard
                 squares={this.state.squares}
-                handleSquareClick={this.handleSquareClick.bind(this)}
-                handleSquareRightClick={this.handleSquareRightClick.bind(this)}
-                handleSquareDoubleClick={this.handleSquareDoubleClick.bind(this)}
+                handleSquareClick={this.handleSquareClick}
+                handleSquareRightClick={this.handleSquareRightClick}
+                handleSquareDoubleClick={this.handleSquareDoubleClick}
                 isGameActive={isGameInProgress}
             />
             {
@@ -293,6 +322,14 @@ export default class Game extends React.Component<Props, State> {
             {
                 this.state.lost && <p>Better luck next time! </p>
             }
+            <LevelSelectorDialog
+                open={this.state.newGameDialogOpen}
+                onClose={this.handleModalClose}
+                newGameCallback={this.startNewGame.bind(this)}
+                gameInProgress={isGameInProgress}
+            />
         </>;
     }
 }
+
+Modal.setAppElement('#app');

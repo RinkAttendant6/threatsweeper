@@ -1,6 +1,7 @@
 html {
     font-family: sans-serif;
     background-image: radial-gradient(#fffde4, #cff);
+    min-height: 100vh;
 }
 
 table {

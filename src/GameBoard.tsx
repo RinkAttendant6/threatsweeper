@@ -7,8 +7,8 @@ export interface Props {
 
     isGameActive: boolean;
 
-    handleSquareClick: (e: React.MouseEvent, x: number, y: number) => void;
-    handleSquareRightClick: (e: React.MouseEvent, x: number, y: number) => void;
+    handleSquareClick: (e: React.MouseEvent<HTMLElement>, x: number, y: number) => void;
+    handleSquareRightClick: (e: React.MouseEvent<HTMLElement>, x: number, y: number) => void;
     handleSquareDoubleClick: (x: number, y: number) => void;
 }
 
