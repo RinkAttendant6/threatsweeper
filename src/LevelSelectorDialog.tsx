@@ -1,4 +1,4 @@
-import GameLevelInterface from './interfaces/GameLevelInterface';
+import IGameLevelInterface from './interfaces/IGameLevelInterface';
 import Levels from './Levels';
 import React from 'react';
 import Modal from 'react-modal';
@@ -7,7 +7,7 @@ export interface Props {
     open: boolean;
     onClose: () => void;
 
-    newGameCallback: (level: GameLevelInterface) => void;
+    newGameCallback: (level: IGameLevelInterface) => void;
 
     gameInProgress: boolean;
 }

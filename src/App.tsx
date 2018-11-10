@@ -2,7 +2,7 @@ import React from 'react';
 import Game from './Game';
 
 export default class App extends React.Component {
-    render() {
+    public render() {
         return (
             <main>
                 <Game />

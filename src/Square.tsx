@@ -1,5 +1,5 @@
 import React from 'react';
-import SquareDataInterface, {DisplayState} from './interfaces/SquareDataInterface';
+import ISquareDataInterface, {DisplayState} from './interfaces/ISquareDataInterface';
 import {AlertOctagon, Flag, HelpCircle} from 'react-feather';
 
 export interface Props {
@@ -7,7 +7,7 @@ export interface Props {
     y: number;
     gameInProgress: boolean;
 
-    squareState: SquareDataInterface;
+    squareState: ISquareDataInterface;
 
     onClick: (e: React.MouseEvent<HTMLElement>) => void;
     onRightClick: (e: React.MouseEvent<HTMLElement>) => void;

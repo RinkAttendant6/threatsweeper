@@ -1,9 +1,9 @@
 import React from 'react';
 import Square from './Square';
-import SquareDataInterface from './interfaces/SquareDataInterface';
+import ISquareDataInterface from './interfaces/ISquareDataInterface';
 
 export interface Props {
-    squares: SquareDataInterface[][];
+    squares: ISquareDataInterface[][];
 
     isGameActive: boolean;
 

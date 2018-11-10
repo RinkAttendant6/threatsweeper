@@ -1,22 +1,21 @@
 import React from 'react';
 import GameBoard from './GameBoard';
-import GameLevelInterface from './interfaces/GameLevelInterface';
+import IGameLevelInterface from './interfaces/IGameLevelInterface';
 import Levels from './Levels';
 import LevelSelectorDialog from './LevelSelectorDialog';
 import Modal from 'react-modal';
-import SquareDataInterface, {DisplayState} from "./interfaces/SquareDataInterface";
-
-export interface Props {
-}
+import ISquareDataInterface, {DisplayState} from './interfaces/ISquareDataInterface';
 
 export interface State {
-    level: GameLevelInterface;
+    level: IGameLevelInterface;
 
-    squares: SquareDataInterface[][];
     mines: Set<string>;
+    squares: ISquareDataInterface[][];
+
     timer: number;
-    won: boolean;
+
     lost: boolean;
+    won: boolean;
 
     newGameDialogOpen: boolean;
 }
@@ -24,21 +23,24 @@ export interface State {
 /**
  * Class representing the game
  */
-export default class Game extends React.Component<Props, State> {
+export default class Game extends React.Component<{}, State> {
     private timerID: number|null;
 
-    constructor(props: Props) {
+    constructor(props = {}) {
         super(props);
 
         this.timerID = null;
 
         this.state = {
             level: Levels.EASY,
-            squares: [[]],
+
             mines: new Set(),
+            squares: [[]],
             timer: 0,
+
             won: false,
             lost: false,
+
             newGameDialogOpen: false
         };
     }
@@ -46,17 +48,17 @@ export default class Game extends React.Component<Props, State> {
     /**
      * Initialize the array that holds all information about the squares on the game board
      */
-    initializeSquaresArray(mines: Set<string>): SquareDataInterface[][] {
+    private initializeSquaresArray(mines: Set<string>): ISquareDataInterface[][] {
         let {width, height} = this.state.level;
-        let squares: SquareDataInterface[][] = [];
+        let squares: ISquareDataInterface[][] = [];
 
         for (let i = 0; i < width; ++i) {
             squares[i] = [];
 
             for (let j = 0; j < height; ++j) {
                 squares[i][j] = {
-                    surroundingMines: this.computeSurroundingMines(mines, i, j),
-                    displayState: DisplayState.Covered
+                    displayState: DisplayState.Covered,
+                    surroundingMines: this.computeSurroundingMines(mines, i, j)
                 };
             }
         }
@@ -67,7 +69,7 @@ export default class Game extends React.Component<Props, State> {
     /**
      * Determine the number of surrounding mines for a given square
      */
-    computeSurroundingMines(mines: Set<string>, x: number, y: number): number {
+    private computeSurroundingMines(mines: Set<string>, x: number, y: number): number {
         if (mines.has(x + ',' + y)) {
             return -1;
         }
@@ -94,7 +96,7 @@ export default class Game extends React.Component<Props, State> {
     /**
      * Starts a new game
      */
-    startNewGame(level: GameLevelInterface = Levels.EASY): void {
+    startNewGame(level: IGameLevelInterface = Levels.EASY): void {
         this.stopTimer();
 
         this.setState({level}, () => {
@@ -125,7 +127,7 @@ export default class Game extends React.Component<Props, State> {
     /**
      * Generates a set of mines
      */
-    generateMines(): Set<string> {
+    private generateMines(): Set<string> {
         const {width, height} = this.state.level;
         let mines = new Set();
 
@@ -141,17 +143,17 @@ export default class Game extends React.Component<Props, State> {
     /**
      * Starts a timer
      */
-    startTimer() {
+    private startTimer() {
         this.timerID = window.setInterval(
             () => this.tick(),
             1000
-        )
+        );
     }
 
     /**
      * Stops a timer
      */
-    stopTimer() {
+    private stopTimer() {
         if (this.timerID !== null) {
             window.clearInterval(this.timerID);
         }
@@ -188,7 +190,7 @@ export default class Game extends React.Component<Props, State> {
 
         let newSquares = this.state.squares.slice();
 
-        const surroundingMines = this.state.squares[x][y].surroundingMines
+        const surroundingMines = this.state.squares[x][y].surroundingMines;
         const newState: DisplayState = surroundingMines === -1 ? DisplayState.Detonated : DisplayState.Uncovered;
 
         newSquares[x][y].displayState = newState;
@@ -213,7 +215,7 @@ export default class Game extends React.Component<Props, State> {
     /**
      * Reveals adjacent squares
      */
-    private _revealAdjacentSquares(squares: SquareDataInterface[][], x: number, y: number): SquareDataInterface[][] {
+    private _revealAdjacentSquares(squares: ISquareDataInterface[][], x: number, y: number): ISquareDataInterface[][] {
         const {width, height} = this.state.level;
 
         const choices = [
@@ -293,7 +295,7 @@ export default class Game extends React.Component<Props, State> {
         this.setState({newGameDialogOpen: false});
     };
 
-    render() {
+    public render() {
         const isGameInProgress = !this.state.won && !this.state.lost;
         const numberOfFlags = this.state.squares.reduce((acc, column): number => {
             return acc + column.reduce((acc, cell): number => {

@@ -1,4 +1,4 @@
-import Level from './interfaces/GameLevelInterface';
+import Level from './interfaces/IGameLevelInterface';
 
 const Levels: {[key: string]: Level} = {
     EASY: {
