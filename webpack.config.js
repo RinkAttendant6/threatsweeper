@@ -5,7 +5,7 @@ const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const path = require('path');
 const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
 const SriPlugin = require('webpack-subresource-integrity');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 const webpack = require('webpack');
 
 module.exports = (env, argv) => {
@@ -47,7 +47,7 @@ module.exports = (env, argv) => {
         optimization: {
             minimize: isProductionBuild,
             minimizer: [
-                new UglifyJsPlugin({
+                new TerserPlugin({
                     cache: true,
                     parallel: true,
                     sourceMap: true
