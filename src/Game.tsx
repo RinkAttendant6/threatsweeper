@@ -129,7 +129,7 @@ export default class Game extends React.Component<{}, State> {
      */
     private generateMines(): Set<string> {
         const {width, height} = this.state.level;
-        let mines = new Set();
+        let mines: Set<string> = new Set();
 
         while (mines.size < this.state.level.mines) {
             let x = Math.floor(Math.random() * Math.floor(width));

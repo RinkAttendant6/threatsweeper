@@ -73,7 +73,9 @@ module.exports = (env, argv) => {
                 filename: '[name].css',
                 chunkFilename: '[id].css',
             }),
-            new CleanWebpackPlugin(['dist']),
+            new CleanWebpackPlugin({
+                cleanOnceBeforeBuildPatterns: ['dist']
+            }),
             new HtmlWebpackPlugin({
                 template: path.join(__dirname, 'index.html'),
                 title: 'React Minesweeper',
