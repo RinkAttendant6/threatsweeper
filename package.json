@@ -8,9 +8,9 @@
         "url": "github:RinkAttendant6/react-minesweeper"
     },
     "scripts": {
-        "build": "webpack --mode=production",
-        "start": "webpack serve --mode=development",
-        "watch": "webpack --watch --mode=development"
+        "build": "webpack --mode=production --progress",
+        "start": "webpack serve --mode=development --progress",
+        "watch": "webpack --watch --mode=development --progress"
     },
     "author": "",
     "license": "MPL-2.0",
@@ -31,19 +31,16 @@
         "@types/react-dom": "^17.0",
         "@types/react-modal": "^3.12",
         "babel-loader": "^8.2",
-        "clean-webpack-plugin": "^3.0",
         "css-loader": "^5.2",
-        "html-webpack-plugin": "^3.2.0",
+        "css-minimizer-webpack-plugin": "^2.0",
+        "html-webpack-plugin": "^5.3",
         "mini-css-extract-plugin": "^1.6",
-        "optimize-css-assets-webpack-plugin": "^5.0.4",
-        "script-ext-html-webpack-plugin": "^2.1.5",
         "style-loader": "^2.0",
-        "terser-webpack-plugin": "^4.2.3",
-        "ts-loader": "^8.0",
+        "ts-loader": "^9.1",
         "tslint": "^6.1",
         "typescript": "^4.2",
-        "webpack": "^4.46",
-        "webpack-cli": "^4.5.0",
+        "webpack": "^5.37",
+        "webpack-cli": "^4.7",
         "webpack-dev-server": "^3.11",
         "webpack-subresource-integrity": "^1.5.2"
     }

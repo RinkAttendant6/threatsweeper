@@ -1,11 +1,8 @@
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const path = require('path');
-const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
 const SriPlugin = require('webpack-subresource-integrity');
-const TerserPlugin = require('terser-webpack-plugin');
 const webpack = require('webpack');
 
 module.exports = (env, argv) => {
@@ -47,12 +44,8 @@ module.exports = (env, argv) => {
         optimization: {
             minimize: isProductionBuild,
             minimizer: [
-                new TerserPlugin({
-                    cache: true,
-                    parallel: true,
-                    sourceMap: true
-                }),
-                new OptimizeCSSAssetsPlugin({})
+                `...`,
+                new CssMinimizerPlugin(),
             ],
             splitChunks: {
                 cacheGroups: {
@@ -66,15 +59,13 @@ module.exports = (env, argv) => {
             }
         },
         output: {
+            clean: true,
             crossOriginLoading: 'anonymous',
         },
         plugins: [
             new MiniCssExtractPlugin({
                 filename: '[name].css',
                 chunkFilename: '[id].css',
-            }),
-            new CleanWebpackPlugin({
-                cleanOnceBeforeBuildPatterns: ['dist']
             }),
             new HtmlWebpackPlugin({
                 template: path.join(__dirname, 'index.html'),
@@ -83,15 +74,10 @@ module.exports = (env, argv) => {
                     viewport: 'width=device-width, initial-scale=1, shrink-to-fit=no'
                 }
             }),
-            new ScriptExtHtmlWebpackPlugin({
-                defaultAttribute: 'defer',
-                module: 'main.js'
-            }),
             new SriPlugin({
                 hashFuncNames: ['sha256', 'sha384'],
                 enabled: isProductionBuild,
             }),
-            new webpack.optimize.ModuleConcatenationPlugin(),
             !isProductionBuild && new webpack.HotModuleReplacementPlugin(),
         ].filter(Boolean),
         resolve: {
