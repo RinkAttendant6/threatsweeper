@@ -2,7 +2,7 @@ const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const path = require('path');
-const SriPlugin = require('webpack-subresource-integrity');
+const { SubresourceIntegrityPlugin } = require('webpack-subresource-integrity');
 const webpack = require('webpack');
 
 module.exports = (env, argv) => {
@@ -38,7 +38,9 @@ module.exports = (env, argv) => {
         },
         devtool: isProductionBuild ? false : 'inline-source-map',
         devServer: {
-            contentBase: './dist',
+            static: {
+                directory: path.join(__dirname, 'dist')
+            },
             hot: true
         },
         optimization: {
@@ -74,10 +76,7 @@ module.exports = (env, argv) => {
                     viewport: 'width=device-width, initial-scale=1, shrink-to-fit=no'
                 }
             }),
-            new SriPlugin({
-                hashFuncNames: ['sha256', 'sha384'],
-                enabled: isProductionBuild,
-            }),
+            new SubresourceIntegrityPlugin(),
             !isProductionBuild && new webpack.HotModuleReplacementPlugin(),
         ].filter(Boolean),
         resolve: {
