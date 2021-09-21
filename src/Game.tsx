@@ -173,7 +173,7 @@ export default class Game extends React.Component<{}, State> {
         this.stopTimer();
 
         this.setState(prevState => {
-            const scores = [...prevState.scores, prevState.timer].sort().slice(0, 10);
+            const scores = [...prevState.scores, prevState.timer].sort((a, b) => a - b).slice(0, 10);
 
             localStorage.setItem('highscores', JSON.stringify(scores));
 
