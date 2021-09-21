@@ -1,5 +1,6 @@
 import React from 'react';
 import GameBoard from './GameBoard';
+import HighScoreBoard from './HighScoreBoard';
 import IGameLevelInterface from './interfaces/IGameLevelInterface';
 import Levels from './Levels';
 import LevelSelectorDialog from './LevelSelectorDialog';
@@ -16,6 +17,7 @@ export interface State {
 
     lost: boolean;
     won: boolean;
+    scores: number[];
 
     newGameDialogOpen: boolean;
 }
@@ -40,6 +42,7 @@ export default class Game extends React.Component<{}, State> {
 
             won: false,
             lost: false,
+            scores: JSON.parse(localStorage.getItem('highscores') ?? '[]'),
 
             newGameDialogOpen: false
         };
@@ -168,7 +171,17 @@ export default class Game extends React.Component<{}, State> {
      */
     handleGameWin = (): void => {
         this.stopTimer();
-        this.setState({won: true});
+
+        this.setState(prevState => {
+            const scores = [...prevState.scores, prevState.timer].sort().slice(0, 10);
+
+            localStorage.setItem('highscores', JSON.stringify(scores));
+
+            return {
+                won: true,
+                scores
+            };
+        });
     };
 
     /**
@@ -307,17 +320,23 @@ export default class Game extends React.Component<{}, State> {
             <button type='button' onClick={this.handleNewGameClick}>
                 New game
             </button>
-            <div className='header' style={{textAlign: 'center'}}>
-                <p>Time: {this.state.timer} seconds</p>
-                <p>Flags: {numberOfFlags} / {this.state.mines.size}</p>
+
+            <div style={{display: 'flex', flexWrap: 'wrap'}}>
+                <section>
+                    <header className='header' style={{textAlign: 'center'}}>
+                        <p>Time: {this.state.timer} seconds</p>
+                        <p>Flags: {numberOfFlags} / {this.state.mines.size}</p>
+                    </header>
+                    <GameBoard
+                        squares={this.state.squares}
+                        handleSquareClick={this.handleSquareClick}
+                        handleSquareRightClick={this.handleSquareRightClick}
+                        handleSquareDoubleClick={this.handleSquareDoubleClick}
+                        isGameActive={isGameInProgress}
+                    />
+                </section>
+                <HighScoreBoard highscores={this.state.scores} />
             </div>
-            <GameBoard
-                squares={this.state.squares}
-                handleSquareClick={this.handleSquareClick}
-                handleSquareRightClick={this.handleSquareRightClick}
-                handleSquareDoubleClick={this.handleSquareDoubleClick}
-                isGameActive={isGameInProgress}
-            />
             {
                 this.state.won && <p>Congratulations!</p>
             }
