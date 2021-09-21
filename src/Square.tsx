@@ -1,6 +1,8 @@
 import React from 'react';
-import ISquareDataInterface, {DisplayState} from './interfaces/ISquareDataInterface';
-import {AlertOctagon, Flag, HelpCircle} from 'react-feather';
+import ISquareDataInterface, {
+    DisplayState,
+} from './interfaces/ISquareDataInterface';
+import { AlertOctagon, Flag, HelpCircle } from 'react-feather';
 
 export interface Props {
     x: number;
@@ -19,9 +21,9 @@ export interface Props {
  */
 export default class Square extends React.Component<Props> {
     render() {
-        let contents: string|JSX.Element = '';
-        let label: string = '';
-        let className: string|null = null;
+        let contents: string | JSX.Element = '';
+        let label = '';
+        let className: string | null = null;
 
         switch (this.props.squareState.displayState) {
             case DisplayState.Covered:
@@ -29,7 +31,9 @@ export default class Square extends React.Component<Props> {
                 label = `Square ${this.props.x},${this.props.y}`;
                 break;
             case DisplayState.Uncovered:
-                contents = String(this.props.squareState.surroundingMines || '');
+                contents = String(
+                    this.props.squareState.surroundingMines || ''
+                );
                 label = `There are ${this.props.squareState.surroundingMines} mines around this square`;
                 className = '';
                 break;
@@ -40,7 +44,8 @@ export default class Square extends React.Component<Props> {
                 break;
             case DisplayState.Maybe:
                 contents = <HelpCircle />;
-                label = 'This square has been marked as possibly containing a mine';
+                label =
+                    'This square has been marked as possibly containing a mine';
                 className = 'maybe';
                 break;
             case DisplayState.Detonated:
@@ -51,14 +56,36 @@ export default class Square extends React.Component<Props> {
         }
 
         return (
-            <td key={this.props.x + ' ' + this.props.y} className={className || ''}>
-                <button type='button'
-                        title={label}
-                        aria-label={label}
-                        disabled={!this.props.gameInProgress || [DisplayState.Uncovered, DisplayState.Detonated].includes(this.props.squareState.displayState)}
-                        onClick={this.props.gameInProgress ? this.props.onClick : undefined}
-                        onDoubleClick={this.props.gameInProgress ? this.props.onDoubleClick : undefined}
-                        onContextMenu={this.props.gameInProgress ? this.props.onRightClick : undefined}
+            <td
+                key={this.props.x + ' ' + this.props.y}
+                className={className || ''}
+            >
+                <button
+                    type='button'
+                    title={label}
+                    aria-label={label}
+                    disabled={
+                        !this.props.gameInProgress ||
+                        [
+                            DisplayState.Uncovered,
+                            DisplayState.Detonated,
+                        ].includes(this.props.squareState.displayState)
+                    }
+                    onClick={
+                        this.props.gameInProgress
+                            ? this.props.onClick
+                            : undefined
+                    }
+                    onDoubleClick={
+                        this.props.gameInProgress
+                            ? this.props.onDoubleClick
+                            : undefined
+                    }
+                    onContextMenu={
+                        this.props.gameInProgress
+                            ? this.props.onRightClick
+                            : undefined
+                    }
                 >
                     {contents}
                 </button>
