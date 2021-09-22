@@ -3,8 +3,7 @@ import GameBoard from './GameBoard';
 import HighScoreBoard from './HighScoreBoard';
 import IGameLevelInterface from './interfaces/IGameLevelInterface';
 import Levels from './Levels';
-import LevelSelectorDialog from './LevelSelectorDialog';
-import Modal from 'react-modal';
+import LevelSelectorPanel from './LevelSelectorPanel';
 import ISquareDataInterface, {
     DisplayState,
 } from './interfaces/ISquareDataInterface';
@@ -17,11 +16,10 @@ export interface State {
 
     timer: number;
 
+    gameInProgress: boolean;
     lost: boolean;
     won: boolean;
     scores: number[];
-
-    newGameDialogOpen: boolean;
 }
 
 /**
@@ -42,11 +40,10 @@ export default class Game extends React.Component<unknown, State> {
             squares: [[]],
             timer: 0,
 
+            gameInProgress: false,
             won: false,
             lost: false,
             scores: JSON.parse(localStorage.getItem('highscores') ?? '[]'),
-
-            newGameDialogOpen: false,
         };
     }
 
@@ -105,30 +102,41 @@ export default class Game extends React.Component<unknown, State> {
     }
 
     /**
+     * Initializes a game
+     */
+    initializeGame(): void {
+        const mines = this.generateMines();
+        const squares = this.initializeSquaresArray(mines);
+
+        this.setState({
+            squares,
+            mines,
+            timer: 0,
+            won: false,
+            lost: false,
+        });
+    }
+
+    /**
      * Starts a new game
      */
     startNewGame(level: IGameLevelInterface = Levels.EASY): void {
+        if (
+            this.state.gameInProgress &&
+            !window.confirm('Are you sure you want to start a new game?')
+        ) {
+            return;
+        }
+
         this.stopTimer();
 
         this.setState({ level }, () => {
-            const mines = this.generateMines();
-            const squares = this.initializeSquaresArray(mines);
-
-            this.setState({
-                squares,
-                mines,
-                timer: 0,
-                won: false,
-                lost: false,
-                newGameDialogOpen: false,
-            });
-
-            this.startTimer();
+            this.initializeGame();
         });
     }
 
     componentDidMount() {
-        this.startNewGame();
+        this.initializeGame();
     }
 
     componentWillUnmount() {
@@ -187,6 +195,7 @@ export default class Game extends React.Component<unknown, State> {
             localStorage.setItem('highscores', JSON.stringify(scores));
 
             return {
+                gameInProgress: false,
                 won: true,
                 scores,
             };
@@ -198,7 +207,11 @@ export default class Game extends React.Component<unknown, State> {
      */
     handleGameLose = (): void => {
         this.stopTimer();
-        this.setState({ lost: true });
+
+        this.setState({
+            gameInProgress: false,
+            lost: true,
+        });
     };
 
     /**
@@ -215,6 +228,10 @@ export default class Game extends React.Component<unknown, State> {
         ) {
             // Not left click or clicked on invalid square
             return;
+        }
+
+        if (!this.state.gameInProgress) {
+            this.setState({ gameInProgress: true }, () => this.startTimer());
         }
 
         let newSquares = this.state.squares.slice();
@@ -305,6 +322,10 @@ export default class Game extends React.Component<unknown, State> {
             DisplayState.Maybe,
         ];
 
+        if (!this.state.gameInProgress) {
+            this.setState({ gameInProgress: true }, () => this.startTimer());
+        }
+
         let currentSquareStateIdx = stateTransitions.indexOf(
             this.state.squares[x][y].displayState
         );
@@ -332,20 +353,6 @@ export default class Game extends React.Component<unknown, State> {
         console.log('Double clicked on square %d %d', x, y);
     };
 
-    /**
-     * Handles clicking the new game button
-     */
-    handleNewGameClick = (): void => {
-        this.setState({ newGameDialogOpen: true });
-    };
-
-    /**
-     * Handles closing the new game modal
-     */
-    handleModalClose = (): void => {
-        this.setState({ newGameDialogOpen: false });
-    };
-
     public render() {
         const isGameInProgress = !this.state.won && !this.state.lost;
         const numberOfFlags = this.state.squares.reduce(
@@ -365,9 +372,9 @@ export default class Game extends React.Component<unknown, State> {
 
         return (
             <>
-                <button type='button' onClick={this.handleNewGameClick}>
-                    New game
-                </button>
+                <LevelSelectorPanel
+                    newGameCallback={this.startNewGame.bind(this)}
+                />
 
                 <div style={{ display: 'flex', flexWrap: 'wrap' }}>
                     <section>
@@ -394,15 +401,7 @@ export default class Game extends React.Component<unknown, State> {
                 </div>
                 {this.state.won && <p>Congratulations!</p>}
                 {this.state.lost && <p>Better luck next time! </p>}
-                <LevelSelectorDialog
-                    open={this.state.newGameDialogOpen}
-                    onClose={this.handleModalClose}
-                    newGameCallback={this.startNewGame.bind(this)}
-                    gameInProgress={isGameInProgress}
-                />
             </>
         );
     }
 }
-
-Modal.setAppElement('#app');
