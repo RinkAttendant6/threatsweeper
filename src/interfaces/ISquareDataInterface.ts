@@ -3,7 +3,7 @@ export enum DisplayState {
     Uncovered = 'UNCOVERED',
     Flagged = 'FLAGGED',
     Detonated = 'DETONATED',
-    Maybe = 'MAYBE'
+    Maybe = 'MAYBE',
 }
 
 export default interface ISquareDataInterface {

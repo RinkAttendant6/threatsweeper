@@ -40,8 +40,7 @@ module.exports = (env, argv) => {
         devServer: {
             static: {
                 directory: path.join(__dirname, 'dist')
-            },
-            hot: true
+            }
         },
         optimization: {
             minimize: isProductionBuild,
@@ -77,7 +76,6 @@ module.exports = (env, argv) => {
                 }
             }),
             new SubresourceIntegrityPlugin(),
-            !isProductionBuild && new webpack.HotModuleReplacementPlugin(),
         ].filter(Boolean),
         resolve: {
             extensions: ['.tsx', '.ts', '.js']

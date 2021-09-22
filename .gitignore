@@ -3,6 +3,10 @@ dist/
 ## Node
 npm-debug.log*
 node_modules/
+.eslintcache
 
 ## WebStorm
 .idea/
+
+## Visual Studio Code
+.vscode/
