@@ -10,7 +10,8 @@
     "scripts": {
         "build": "webpack --mode=production --progress",
         "start": "webpack serve --mode=development --progress",
-        "watch": "webpack --watch --mode=development --progress"
+        "watch": "webpack --watch --mode=development --progress",
+        "prepare": "husky install"
     },
     "author": "",
     "license": "MPL-2.0",
@@ -39,6 +40,8 @@
         "eslint-config-prettier": "^8.3.0",
         "eslint-plugin-prettier": "^4.0.0",
         "html-webpack-plugin": "^5.3.2",
+        "husky": "^7.0.2",
+        "lint-staged": "^11.1.2",
         "mini-css-extract-plugin": "^2.3",
         "prettier": "2.4.1",
         "style-loader": "^3.2",
@@ -48,5 +51,8 @@
         "webpack-cli": "^4.8",
         "webpack-dev-server": "^4.2",
         "webpack-subresource-integrity": "^5.0"
+    },
+    "lint-staged": {
+        "*.js": "eslint --cache --fix"
     }
 }
