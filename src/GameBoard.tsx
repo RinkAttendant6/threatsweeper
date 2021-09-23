@@ -7,11 +7,7 @@ export interface Props {
 
     isGameActive: boolean;
 
-    handleSquareClick: (
-        e: React.MouseEvent<HTMLElement>,
-        x: number,
-        y: number
-    ) => void;
+    handleSquareClick: (x: number, y: number) => void;
     handleSquareRightClick: (
         e: React.MouseEvent<HTMLElement>,
         x: number,
@@ -36,8 +32,8 @@ export default class GameBoard extends React.Component<Props> {
                                     x={x}
                                     y={y}
                                     gameAvailable={this.props.isGameActive}
-                                    onClick={(e) =>
-                                        this.props.handleSquareClick(e, x, y)
+                                    onClick={() =>
+                                        this.props.handleSquareClick(x, y)
                                     }
                                     onDoubleClick={() =>
                                         this.props.handleSquareDoubleClick(x, y)
