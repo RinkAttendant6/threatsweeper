@@ -209,10 +209,47 @@ export default class GameEngine {
             return false;
         }
 
-        // TODO handle double click to reveal squares
         console.log('Auto-reveal activated on square %d %d', x, y);
 
-        return false;
+        const { width, height } = this.#level;
+
+        const choices = [
+            [x - 1, y - 1],
+            [x - 1, y],
+            [x - 1, y + 1],
+            [x, y - 1],
+            [x, y + 1],
+            [x + 1, y - 1],
+            [x + 1, y],
+            [x + 1, y + 1],
+        ];
+
+        const adjacentSquares = choices.filter(([v, h]) => {
+            return v >= 0 && v < width && h >= 0 && h < height;
+        });
+
+        const adjacentMaybe = adjacentSquares.filter(
+            ([v, h]) => this.#board[v][h].displayState === DisplayState.Maybe
+        );
+
+        const adjacentFlags = adjacentSquares.filter(
+            ([v, h]) => this.#board[v][h].displayState === DisplayState.Flagged
+        );
+
+        if (
+            adjacentMaybe.length > 0 ||
+            adjacentFlags.length !== this.#board[x][y].surroundingMines
+        ) {
+            return false;
+        }
+
+        const adjacentCoveredSquares = adjacentSquares.filter(
+            ([v, h]) => this.#board[v][h].displayState === DisplayState.Covered
+        );
+
+        adjacentCoveredSquares.forEach(([v, h]) => this.uncover(v, h));
+
+        return true;
     }
 
     get gameState(): GameState {

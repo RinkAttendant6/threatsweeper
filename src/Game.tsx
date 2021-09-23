@@ -169,7 +169,13 @@ export default class Game extends React.Component<unknown, State> {
      */
     handleSquareDoubleClick = (x: number, y: number): void => {
         if (this.#gameEngine.autoUncoverAdjacent(x, y)) {
-            this.setState({ game: this.#gameEngine.gameState });
+            this.setState({ game: this.#gameEngine.gameState }, () => {
+                if (this.state.game.won) {
+                    this.handleGameWin();
+                } else if (this.state.game.lost) {
+                    this.handleGameLose();
+                }
+            });
         }
     };
 
