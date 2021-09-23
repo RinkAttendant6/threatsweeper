@@ -2,12 +2,17 @@ import React from 'react';
 import ISquareDataInterface, {
     DisplayState,
 } from './interfaces/ISquareDataInterface';
-import { AlertOctagon, Flag, HelpCircle } from 'react-feather';
+import {
+    EndPointSolidIcon,
+    BlockedSiteIcon,
+    BlockedSiteSolid12Icon,
+    UnknownSolidIcon,
+} from '@fluentui/react-icons-mdl2';
 
 export interface Props {
     x: number;
     y: number;
-    gameInProgress: boolean;
+    gameAvailable: boolean;
 
     squareState: ISquareDataInterface;
 
@@ -21,38 +26,52 @@ export interface Props {
  */
 export default class Square extends React.Component<Props> {
     render() {
-        let contents: string | JSX.Element = '';
-        let label = '';
-        let className: string | null = null;
+        let contents: string | JSX.Element = {
+            [DisplayState.Covered]: '',
+            [DisplayState.Uncovered]: String(
+                this.props.squareState.surroundingMines || ''
+            ),
+            [DisplayState.Flagged]: <EndPointSolidIcon />,
+            [DisplayState.Maybe]: <UnknownSolidIcon />,
+            [DisplayState.Detonated]: <BlockedSiteSolid12Icon />,
+        }[this.props.squareState.displayState];
 
-        switch (this.props.squareState.displayState) {
-            case DisplayState.Covered:
-                className = 'covered';
-                label = `Square ${this.props.x},${this.props.y}`;
-                break;
-            case DisplayState.Uncovered:
-                contents = String(
-                    this.props.squareState.surroundingMines || ''
-                );
-                label = `There are ${this.props.squareState.surroundingMines} mines around this square`;
-                className = '';
-                break;
-            case DisplayState.Flagged:
-                contents = <Flag />;
-                label = 'This square has been marked as a potential mine';
-                className = 'flagged';
-                break;
-            case DisplayState.Maybe:
-                contents = <HelpCircle />;
-                label =
-                    'This square has been marked as possibly containing a mine';
-                className = 'maybe';
-                break;
-            case DisplayState.Detonated:
-                contents = <AlertOctagon />;
-                label = 'This mine has been detonated';
-                className = 'detonated';
-                break;
+        let label: string = {
+            [DisplayState.Covered]: `Square ${this.props.x},${this.props.y}`,
+            [DisplayState.Uncovered]: `Square ${this.props.x},${this.props.y} - ${this.props.squareState.surroundingMines} surrounding mines`,
+            [DisplayState.Flagged]: `Square ${this.props.x},${this.props.y} - Marked as containing a mine`,
+            [DisplayState.Maybe]: `Square ${this.props.x},${this.props.y} - Marked as possibly containing a mine`,
+            [DisplayState.Detonated]: `Square ${this.props.x},${this.props.y} - Detonated`,
+        }[this.props.squareState.displayState];
+
+        let className: string = {
+            [DisplayState.Covered]: `covered`,
+            [DisplayState.Uncovered]: ``,
+            [DisplayState.Flagged]: `flagged`,
+            [DisplayState.Maybe]: `maybe`,
+            [DisplayState.Detonated]: `detonated`,
+        }[this.props.squareState.displayState];
+
+        // If game is not in progress
+        if (!this.props.gameAvailable) {
+            // Incorrectly flagged squares
+            if (
+                this.props.squareState.displayState === DisplayState.Flagged &&
+                this.props.squareState.surroundingMines !== -1
+            ) {
+                label = `Square ${this.props.x},${this.props.y} - Falsely marked as containing a mine`;
+                className = 'flagged-wrong';
+            }
+
+            // Undetonated mines
+            if (
+                this.props.squareState.displayState === DisplayState.Covered &&
+                this.props.squareState.surroundingMines === -1
+            ) {
+                contents = <BlockedSiteIcon />;
+                label = `Square ${this.props.x},${this.props.y} - Contained a mine`;
+                className = 'vulnerable';
+            }
         }
 
         return (
@@ -64,25 +83,23 @@ export default class Square extends React.Component<Props> {
                     type='button'
                     title={label}
                     aria-label={label}
-                    disabled={
-                        !this.props.gameInProgress ||
-                        [
-                            DisplayState.Uncovered,
-                            DisplayState.Detonated,
-                        ].includes(this.props.squareState.displayState)
-                    }
+                    disabled={!this.props.gameAvailable}
                     onClick={
-                        this.props.gameInProgress
+                        this.props.gameAvailable &&
+                        this.props.squareState.displayState ===
+                            DisplayState.Covered
                             ? this.props.onClick
                             : undefined
                     }
                     onDoubleClick={
-                        this.props.gameInProgress
+                        this.props.gameAvailable &&
+                        this.props.squareState.displayState ===
+                            DisplayState.Uncovered
                             ? this.props.onDoubleClick
                             : undefined
                     }
                     onContextMenu={
-                        this.props.gameInProgress
+                        this.props.gameAvailable
                             ? this.props.onRightClick
                             : undefined
                     }

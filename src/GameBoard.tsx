@@ -35,7 +35,7 @@ export default class GameBoard extends React.Component<Props> {
                                     key={x + ',' + y}
                                     x={x}
                                     y={y}
-                                    gameInProgress={this.props.isGameActive}
+                                    gameAvailable={this.props.isGameActive}
                                     onClick={(e) =>
                                         this.props.handleSquareClick(e, x, y)
                                     }

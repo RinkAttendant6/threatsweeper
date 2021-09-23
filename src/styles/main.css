@@ -62,6 +62,15 @@ td svg {
     background: radial-gradient(#5d1674, #2f0047) no-repeat;
 }
 
+.flagged-wrong button {
+    color: white;
+    background: radial-gradient(orange, darkorange) no-repeat;
+}
+
 .detonated button {
     background-color: red;
+}
+
+.vulnerable button {
+    background-color: yellow;
 }

@@ -7,6 +7,7 @@ import LevelSelectorPanel from './LevelSelectorPanel';
 import ISquareDataInterface, {
     DisplayState,
 } from './interfaces/ISquareDataInterface';
+import { Stack } from '@fluentui/react/lib/Stack';
 
 export interface State {
     level: IGameLevelInterface;
@@ -354,7 +355,7 @@ export default class Game extends React.Component<unknown, State> {
     };
 
     public render() {
-        const isGameInProgress = !this.state.won && !this.state.lost;
+        const isGameActive = !this.state.won && !this.state.lost;
         const numberOfFlags = this.state.squares.reduce(
             (acc, column): number => {
                 return (
@@ -376,8 +377,8 @@ export default class Game extends React.Component<unknown, State> {
                     newGameCallback={this.startNewGame.bind(this)}
                 />
 
-                <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-                    <section>
+                <Stack horizontal horizontalAlign='space-around'>
+                    <Stack.Item>
                         <header
                             className='header'
                             style={{ textAlign: 'center' }}
@@ -394,11 +395,11 @@ export default class Game extends React.Component<unknown, State> {
                             handleSquareDoubleClick={
                                 this.handleSquareDoubleClick
                             }
-                            isGameActive={isGameInProgress}
+                            isGameActive={isGameActive}
                         />
-                    </section>
+                    </Stack.Item>
                     <HighScoreBoard highscores={this.state.scores} />
-                </div>
+                </Stack>
                 {this.state.won && <p>Congratulations!</p>}
                 {this.state.lost && <p>Better luck next time! </p>}
             </>
