@@ -6,8 +6,8 @@ html {
 
 table {
     margin: 1em auto;
-    border-spacing: 0.25em;
     background-color: rgba(255, 255, 255, 0.2);
+    border-spacing: 0;
 }
 
 td {
@@ -22,35 +22,37 @@ td {
 }
 
 td button {
-    border: thin solid #ccc;
-    border-radius: 2px;
+    border: thin solid #999;
+    border-radius: 10%;
     font-size: 1.5em;
     padding: 0.25rem;
     height: 100%;
     width: 100%;
     background-color: transparent;
     color: inherit;
+    text-align: center;
 }
 
 td button:enabled {
     cursor: pointer;
 }
 
-td button:empty:disabled {
-    box-shadow: none;
-}
-
 td button:disabled:not(:empty) {
     border-color: #999;
 }
 
-td svg {
-    vertical-align: middle;
+.covered button {
+    background-color: lightskyblue;
 }
 
-.covered button {
-    background: radial-gradient(#fceabb, #f8b500) no-repeat;
-    box-shadow: 1px 1px #333;
+.covered button:enabled:hover,
+.covered button:enabled:focus {
+    border-color: #333;
+    background-color: deepskyblue;
+}
+
+.revealed button:empty {
+    border-color: #ccc;
 }
 
 .maybe button {
@@ -69,8 +71,11 @@ td svg {
 
 .detonated button {
     background-color: red;
+    box-shadow: 2px 4px 4px rgba(0, 0, 0, 0.5);
+    border-radius: 2px;
 }
 
 .vulnerable button {
     background-color: yellow;
+    border-radius: 2px;
 }

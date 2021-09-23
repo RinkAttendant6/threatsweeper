@@ -46,7 +46,7 @@ export default class Square extends React.Component<Props> {
 
         let className: string = {
             [DisplayState.Covered]: `covered`,
-            [DisplayState.Uncovered]: ``,
+            [DisplayState.Uncovered]: `revealed`,
             [DisplayState.Flagged]: `flagged`,
             [DisplayState.Maybe]: `maybe`,
             [DisplayState.Detonated]: `detonated`,
