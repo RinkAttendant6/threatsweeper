@@ -9,7 +9,7 @@
     },
     "scripts": {
         "build": "parcel build --public-url ./",
-        "start": "parcel serve --lazy --port=8080",
+        "start": "parcel serve --port=8080",
         "prepare": "husky install"
     },
     "author": "",

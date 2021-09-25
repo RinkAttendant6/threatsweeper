@@ -6,7 +6,10 @@ import IGameLevelInterface from './interfaces/IGameLevelInterface';
 import Levels from './Levels';
 import LevelSelectorPanel from './LevelSelectorPanel';
 import { DisplayState } from './interfaces/ISquareDataInterface';
+import { MessageBar, MessageBarType } from '@fluentui/react/lib/MessageBar';
+import { registerIcons } from '@fluentui/react/lib/Styling';
 import { Stack } from '@fluentui/react/lib/Stack';
+import { LikeSolidIcon, SadIcon } from '@fluentui/react-icons-mdl2';
 
 export interface State {
     level: IGameLevelInterface;
@@ -22,13 +25,12 @@ export interface State {
  * Class representing the game
  */
 export default class Game extends React.Component<unknown, State> {
-    private timerID: number | null;
+    #timerID: number | null = null;
     #gameEngine: GameEngine;
 
     constructor(props = {}) {
         super(props);
 
-        this.timerID = null;
         this.#gameEngine = new GameEngine();
 
         this.state = {
@@ -40,6 +42,13 @@ export default class Game extends React.Component<unknown, State> {
             gameInProgress: false,
             scores: JSON.parse(localStorage.getItem('highscores') ?? '[]'),
         };
+
+        registerIcons({
+            icons: {
+                LikeSolid: <LikeSolidIcon />,
+                Sad: <SadIcon />,
+            },
+        });
     }
 
     /**
@@ -65,7 +74,7 @@ export default class Game extends React.Component<unknown, State> {
             return;
         }
 
-        this.stopTimer();
+        this.#stopTimer();
 
         this.setState({ level }, () => {
             this.initializeGame();
@@ -73,23 +82,25 @@ export default class Game extends React.Component<unknown, State> {
     }
 
     componentWillUnmount() {
-        this.stopTimer();
+        this.#stopTimer();
     }
 
     /**
      * Starts a timer
      */
-    private startTimer() {
-        this.timerID = window.setInterval(() => this.tick(), 1000);
+    #startTimer(): void {
+        this.#timerID = window.setInterval(() => this.tick(), 1000);
     }
 
     /**
      * Stops a timer
      */
-    private stopTimer() {
-        if (this.timerID !== null) {
-            window.clearInterval(this.timerID);
+    #stopTimer(): void {
+        if (this.#timerID !== null) {
+            window.clearInterval(this.#timerID);
         }
+
+        this.#timerID = null;
     }
 
     private tick() {
@@ -102,7 +113,7 @@ export default class Game extends React.Component<unknown, State> {
      * Handles winning game event
      */
     handleGameWin = (): void => {
-        this.stopTimer();
+        this.#stopTimer();
 
         this.setState((prevState) => {
             const scores = [...prevState.scores, prevState.timer]
@@ -122,7 +133,7 @@ export default class Game extends React.Component<unknown, State> {
      * Handles losing game event
      */
     handleGameLose = (): void => {
-        this.stopTimer();
+        this.#stopTimer();
         this.setState({ gameInProgress: false });
     };
 
@@ -131,7 +142,7 @@ export default class Game extends React.Component<unknown, State> {
      */
     handleSquareClick = (x: number, y: number): void => {
         if (!this.state.gameInProgress) {
-            this.setState({ gameInProgress: true }, () => this.startTimer());
+            this.setState({ gameInProgress: true }, () => this.#startTimer());
         }
 
         if (this.#gameEngine.uncover(x, y)) {
@@ -156,7 +167,7 @@ export default class Game extends React.Component<unknown, State> {
         event.preventDefault();
 
         if (!this.state.gameInProgress) {
-            this.setState({ gameInProgress: true }, () => this.startTimer());
+            this.setState({ gameInProgress: true }, () => this.#startTimer());
         }
 
         if (this.#gameEngine.toggleFlag(x, y)) {
@@ -197,23 +208,32 @@ export default class Game extends React.Component<unknown, State> {
         );
 
         return (
-            <>
-                <LevelSelectorPanel
-                    newGameCallback={this.startNewGame.bind(this)}
-                />
-
-                <Stack horizontal horizontalAlign='space-around'>
+            <div
+                style={{
+                    backgroundColor: 'rgba(255, 255, 255, 0.75)',
+                    padding: '1em',
+                }}
+            >
+                <Stack
+                    horizontal
+                    horizontalAlign='space-around'
+                    wrap
+                    tokens={{ childrenGap: 'm' }}
+                >
                     <Stack.Item>
-                        <header
-                            className='header'
-                            style={{ textAlign: 'center' }}
-                        >
+                        <LevelSelectorPanel
+                            newGameCallback={this.startNewGame.bind(this)}
+                        />
+                        <div style={{ textAlign: 'center' }}>
                             <p>Time: {this.state.timer} seconds</p>
                             <p>
-                                Flags: {numberOfFlags} /{' '}
-                                {this.state.level.mines}
+                                Flagged threats: <b>{numberOfFlags}</b> of{' '}
+                                <b>{this.state.level.mines}</b>
                             </p>
-                        </header>
+                        </div>
+                    </Stack.Item>
+
+                    <Stack.Item>
                         <GameBoard
                             squares={this.state.game.board}
                             handleSquareClick={this.handleSquareClick}
@@ -223,12 +243,36 @@ export default class Game extends React.Component<unknown, State> {
                             }
                             isGameActive={isGameActive}
                         />
+                        {this.state.game.won && (
+                            <MessageBar
+                                messageBarType={MessageBarType.success}
+                                messageBarIconProps={{
+                                    iconName: 'LikeSolid',
+                                }}
+                                isMultiline={false}
+                                dismissButtonAriaLabel='Close'
+                            >
+                                Congratulations! You have correctly identified
+                                all the threats and protected your network.
+                            </MessageBar>
+                        )}
+                        {this.state.game.lost && (
+                            <MessageBar
+                                messageBarType={MessageBarType.error}
+                                messageBarIconProps={{
+                                    iconName: 'Sad',
+                                }}
+                                isMultiline={false}
+                                dismissButtonAriaLabel='Close'
+                            >
+                                You've been pwned! A malware was detonated and
+                                your network has been compromised.
+                            </MessageBar>
+                        )}
                     </Stack.Item>
                     <HighScoreBoard highscores={this.state.scores} />
                 </Stack>
-                {this.state.game.won && <p>Congratulations!</p>}
-                {this.state.game.lost && <p>Better luck next time! </p>}
-            </>
+            </div>
         );
     }
 }

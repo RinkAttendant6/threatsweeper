@@ -1,6 +1,9 @@
 import IGameLevelInterface from './interfaces/IGameLevelInterface';
 import Levels from './Levels';
 import React from 'react';
+import { CompoundButton } from '@fluentui/react/lib/Button';
+import { Stack } from '@fluentui/react/lib/Stack';
+import { Text } from '@fluentui/react/lib/Text';
 
 export interface Props {
     newGameCallback: (level: IGameLevelInterface) => void;
@@ -11,27 +14,35 @@ export default class LevelSelectorPanel extends React.Component<Props> {
         return (
             <fieldset>
                 <legend>New game</legend>
-                <button
-                    type='button'
-                    value='easy'
-                    onClick={() => this.props.newGameCallback(Levels.EASY)}
-                >
-                    Easy (9 × 9)
-                </button>
-                <button
-                    type='button'
-                    value='medium'
-                    onClick={() => this.props.newGameCallback(Levels.MEDIUM)}
-                >
-                    Medium (16 × 16)
-                </button>
-                <button
-                    type='button'
-                    value='expert'
-                    onClick={() => this.props.newGameCallback(Levels.HARD)}
-                >
-                    Expert (30 × 16)
-                </button>
+                <Stack tokens={{ childrenGap: 's1' }}>
+                    <Text>Choose network size:</Text>
+                    <CompoundButton
+                        type='button'
+                        value='easy'
+                        secondaryText='Easy (9 × 9)'
+                        onClick={() => this.props.newGameCallback(Levels.EASY)}
+                    >
+                        Class C -/24
+                    </CompoundButton>
+                    <CompoundButton
+                        type='button'
+                        value='medium'
+                        secondaryText='Medium (16 × 16)'
+                        onClick={() =>
+                            this.props.newGameCallback(Levels.MEDIUM)
+                        }
+                    >
+                        Class B -/16
+                    </CompoundButton>
+                    <CompoundButton
+                        type='button'
+                        value='expert'
+                        secondaryText='Expert (30 × 16)'
+                        onClick={() => this.props.newGameCallback(Levels.HARD)}
+                    >
+                        Class A -/8
+                    </CompoundButton>
+                </Stack>
             </fieldset>
         );
     }

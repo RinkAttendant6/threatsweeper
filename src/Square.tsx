@@ -37,11 +37,11 @@ export default class Square extends React.Component<Props> {
         }[this.props.squareState.displayState];
 
         let label: string = {
-            [DisplayState.Covered]: `Square ${this.props.x},${this.props.y}`,
-            [DisplayState.Uncovered]: `Square ${this.props.x},${this.props.y} - ${this.props.squareState.surroundingMines} surrounding mines`,
-            [DisplayState.Flagged]: `Square ${this.props.x},${this.props.y} - Marked as containing a mine`,
-            [DisplayState.Maybe]: `Square ${this.props.x},${this.props.y} - Marked as possibly containing a mine`,
-            [DisplayState.Detonated]: `Square ${this.props.x},${this.props.y} - Detonated`,
+            [DisplayState.Covered]: `Node ${this.props.x},${this.props.y}`,
+            [DisplayState.Uncovered]: `Node ${this.props.x},${this.props.y} - ${this.props.squareState.surroundingMines} adjacent threats`,
+            [DisplayState.Flagged]: `Node ${this.props.x},${this.props.y} - Marked as malicious`,
+            [DisplayState.Maybe]: `Node ${this.props.x},${this.props.y} - Marked as potentially malicious`,
+            [DisplayState.Detonated]: `Node ${this.props.x},${this.props.y} - Compromised`,
         }[this.props.squareState.displayState];
 
         let className: string = {
@@ -59,7 +59,7 @@ export default class Square extends React.Component<Props> {
                 this.props.squareState.displayState === DisplayState.Flagged &&
                 this.props.squareState.surroundingMines !== -1
             ) {
-                label = `Square ${this.props.x},${this.props.y} - Falsely marked as containing a mine`;
+                label = `Node ${this.props.x},${this.props.y} - Falsely marked as malicious`;
                 className = 'flagged-wrong';
             }
 
@@ -69,7 +69,7 @@ export default class Square extends React.Component<Props> {
                 this.props.squareState.surroundingMines === -1
             ) {
                 contents = <BlockedSiteIcon />;
-                label = `Square ${this.props.x},${this.props.y} - Contained a mine`;
+                label = `Node ${this.props.x},${this.props.y} - Contained a threat`;
                 className = 'vulnerable';
             }
         }
