@@ -15,7 +15,7 @@ export default class GameWonDialog extends React.Component<Props> {
             type: DialogType.largeHeader,
             title: 'Well done',
             subText:
-                'You have correctly identified and quarantined all the threats on your network.',
+                "Congratulations! All the known threats on your network have been identified and quarantined. You're back in business!",
         };
 
         return (
@@ -35,7 +35,11 @@ export default class GameWonDialog extends React.Component<Props> {
                         />
                         <span>
                             Remember, there is no such thing as 100% secure.{' '}
-                            <a href='https://getcybersafe.gc.ca/en'>
+                            <a
+                                href='https://getcybersafe.gc.ca/en'
+                                target='_blank'
+                                rel='noopener'
+                            >
                                 Learn how to stay safe online.
                             </a>
                         </span>

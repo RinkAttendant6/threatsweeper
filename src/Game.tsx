@@ -108,6 +108,25 @@ export default class Game extends React.Component<unknown, State> {
     }
 
     /**
+     * Get the aggregate count of squares in various states on the game board
+     */
+    #computeBoardStatus(): { [K in DisplayState]: number } {
+        const boardStatus = {
+            [DisplayState.Covered]: 0,
+            [DisplayState.Flagged]: 0,
+            [DisplayState.Maybe]: 0,
+            [DisplayState.Uncovered]: 0,
+            [DisplayState.Detonated]: 0,
+        };
+
+        this.state.game.board.forEach((column) =>
+            column.forEach((cell) => ++boardStatus[cell.displayState])
+        );
+
+        return boardStatus;
+    }
+
+    /**
      * Handles winning game event
      */
     handleGameWin = (): void => {
@@ -198,20 +217,9 @@ export default class Game extends React.Component<unknown, State> {
 
     public render() {
         const isGameActive = !this.state.game.won && !this.state.game.lost;
-        const numberOfFlags = this.state.game.board.reduce(
-            (acc, column): number => {
-                return (
-                    acc +
-                    column.reduce((acc, cell): number => {
-                        return (
-                            acc +
-                            Number(cell.displayState === DisplayState.Flagged)
-                        );
-                    }, 0)
-                );
-            },
-            0
-        );
+
+        const boardStatus = this.#computeBoardStatus();
+        const numberOfFlags = boardStatus[DisplayState.Flagged];
 
         return (
             <>
@@ -261,6 +269,7 @@ export default class Game extends React.Component<unknown, State> {
                 />
                 <GameLostDialog
                     hidden={!this.state.lostDialogOpen}
+                    instantLoss={boardStatus[DisplayState.Uncovered] === 0}
                     toggleHideDialog={this.handleCloseGameOverDialog.bind(this)}
                 />
             </>

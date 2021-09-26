@@ -7,6 +7,7 @@ import { PartialTheme, ThemeProvider } from '@fluentui/react/lib/Theme';
 
 interface Props {
     hidden: boolean;
+    instantLoss: boolean;
     toggleHideDialog: () => void;
 }
 
@@ -21,10 +22,31 @@ export default class GameLostDialog extends React.Component<Props> {
     render() {
         const dialogContentProps = {
             type: DialogType.largeHeader,
-            title: "You've been pwned!",
-            subText:
-                'Oh no! An infected device was booted and your network has been compromised by a wormable ransomware.',
+            title: this.props.instantLoss
+                ? 'Pwned by a 0-day!'
+                : "You've been pwned!",
+            subText: this.props.instantLoss
+                ? `How unlucky! Unfortunately, sometimes that's just the way it is.`
+                : `Oh no! An infected device was booted and your network has been compromised by a wormable ransomware.`,
         };
+
+        const content = this.props.instantLoss ? (
+            <>
+                In real-life, a{' '}
+                <a
+                    href='https://en.wikipedia.org/wiki/Zero-day_(computing)'
+                    target='_blank'
+                    rel='noopener'
+                >
+                    0-day exploit
+                </a>{' '}
+                is often very difficult to defend against. Your best option is
+                to keep your systems up-to-date and practice safe computing
+                habits.
+            </>
+        ) : (
+            <>Cyber security is a shared responsibility.</>
+        );
 
         return (
             <ThemeProvider theme={theme}>
@@ -42,8 +64,12 @@ export default class GameLostDialog extends React.Component<Props> {
                             style={{ fontSize: '1.5rem', color: 'red' }}
                         />
                         <span>
-                            Cyber security is a shared responsibility.{' '}
-                            <a href='https://getcybersafe.gc.ca/en'>
+                            {content}{' '}
+                            <a
+                                href='https://getcybersafe.gc.ca/en'
+                                target='_blank'
+                                rel='noopener'
+                            >
                                 Learn how to stay safe online.
                             </a>
                         </span>
