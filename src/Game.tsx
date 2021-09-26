@@ -1,15 +1,14 @@
 import React from 'react';
 import GameBoard from './GameBoard';
 import GameEngine, { GameState } from './GameEngine';
+import GameLostDialog from './GameLostDialog';
+import GameWonDialog from './GameWonDialog';
 import HighScoreBoard from './HighScoreBoard';
 import IGameLevelInterface from './interfaces/IGameLevelInterface';
 import Levels from './Levels';
 import LevelSelectorPanel from './LevelSelectorPanel';
 import { DisplayState } from './interfaces/ISquareDataInterface';
-import { MessageBar, MessageBarType } from '@fluentui/react/lib/MessageBar';
-import { registerIcons } from '@fluentui/react/lib/Styling';
 import { Stack } from '@fluentui/react/lib/Stack';
-import { LikeSolidIcon, SadIcon } from '@fluentui/react-icons-mdl2';
 
 export interface State {
     level: IGameLevelInterface;
@@ -19,6 +18,9 @@ export interface State {
 
     gameInProgress: boolean;
     scores: number[];
+
+    wonDialogOpen: boolean;
+    lostDialogOpen: boolean;
 }
 
 /**
@@ -41,14 +43,10 @@ export default class Game extends React.Component<unknown, State> {
 
             gameInProgress: false,
             scores: JSON.parse(localStorage.getItem('highscores') ?? '[]'),
-        };
 
-        registerIcons({
-            icons: {
-                LikeSolid: <LikeSolidIcon />,
-                Sad: <SadIcon />,
-            },
-        });
+            wonDialogOpen: false,
+            lostDialogOpen: false,
+        };
     }
 
     /**
@@ -123,6 +121,7 @@ export default class Game extends React.Component<unknown, State> {
             localStorage.setItem('highscores', JSON.stringify(scores));
 
             return {
+                wonDialogOpen: true,
                 gameInProgress: false,
                 scores,
             };
@@ -134,7 +133,10 @@ export default class Game extends React.Component<unknown, State> {
      */
     handleGameLose = (): void => {
         this.#stopTimer();
-        this.setState({ gameInProgress: false });
+        this.setState({
+            lostDialogOpen: true,
+            gameInProgress: false,
+        });
     };
 
     /**
@@ -184,6 +186,16 @@ export default class Game extends React.Component<unknown, State> {
         }
     };
 
+    /**
+     * Handles closing the game won/lost dialogs
+     */
+    handleCloseGameOverDialog(): void {
+        this.setState({
+            wonDialogOpen: false,
+            lostDialogOpen: false,
+        });
+    }
+
     public render() {
         const isGameActive = !this.state.game.won && !this.state.game.lost;
         const numberOfFlags = this.state.game.board.reduce(
@@ -202,71 +214,56 @@ export default class Game extends React.Component<unknown, State> {
         );
 
         return (
-            <Stack
-                tokens={{ childrenGap: 'm' }}
-                style={{
-                    backgroundColor: 'rgba(255, 255, 255, 0.75)',
-                    padding: '1em',
-                }}
-            >
-                <LevelSelectorPanel
-                    newGameCallback={this.startNewGame.bind(this)}
-                />
-
-                {this.state.game.won && (
-                    <MessageBar
-                        messageBarType={MessageBarType.success}
-                        messageBarIconProps={{
-                            iconName: 'LikeSolid',
-                        }}
-                        isMultiline={false}
-                        dismissButtonAriaLabel='Close'
-                    >
-                        Congratulations! You have correctly identified all the
-                        threats and protected your network.
-                    </MessageBar>
-                )}
-                {this.state.game.lost && (
-                    <MessageBar
-                        messageBarType={MessageBarType.error}
-                        messageBarIconProps={{
-                            iconName: 'Sad',
-                        }}
-                        isMultiline={false}
-                        dismissButtonAriaLabel='Close'
-                    >
-                        You've been pwned! A malware was detonated and your
-                        network has been compromised.
-                    </MessageBar>
-                )}
-
+            <>
                 <Stack
-                    horizontal
-                    horizontalAlign='space-around'
-                    wrap
                     tokens={{ childrenGap: 'm' }}
+                    style={{
+                        backgroundColor: 'rgba(255, 255, 255, 0.75)',
+                        padding: '1em',
+                    }}
                 >
-                    <Stack.Item>
-                        <div style={{ textAlign: 'center' }}>
-                            <p>Time: {this.state.timer} seconds</p>
-                            <p>
-                                Flagged threats: <b>{numberOfFlags}</b> of{' '}
-                                <b>{this.state.level.mines}</b>
-                            </p>
-                        </div>
-                        <GameBoard
-                            squares={this.state.game.board}
-                            handleSquareClick={this.handleSquareClick}
-                            handleSquareRightClick={this.handleSquareRightClick}
-                            handleSquareDoubleClick={
-                                this.handleSquareDoubleClick
-                            }
-                            isGameActive={isGameActive}
-                        />
-                    </Stack.Item>
-                    <HighScoreBoard highscores={this.state.scores} />
+                    <LevelSelectorPanel
+                        newGameCallback={this.startNewGame.bind(this)}
+                    />
+
+                    <Stack
+                        horizontal
+                        horizontalAlign='space-around'
+                        wrap
+                        tokens={{ childrenGap: 'm' }}
+                    >
+                        <Stack.Item>
+                            <div style={{ textAlign: 'center' }}>
+                                <p>Time: {this.state.timer} seconds</p>
+                                <p>
+                                    Flagged threats: <b>{numberOfFlags}</b> of{' '}
+                                    <b>{this.state.level.mines}</b>
+                                </p>
+                            </div>
+                            <GameBoard
+                                squares={this.state.game.board}
+                                handleSquareClick={this.handleSquareClick}
+                                handleSquareRightClick={
+                                    this.handleSquareRightClick
+                                }
+                                handleSquareDoubleClick={
+                                    this.handleSquareDoubleClick
+                                }
+                                isGameActive={isGameActive}
+                            />
+                        </Stack.Item>
+                        <HighScoreBoard highscores={this.state.scores} />
+                    </Stack>
                 </Stack>
-            </Stack>
+                <GameWonDialog
+                    hidden={!this.state.wonDialogOpen}
+                    toggleHideDialog={this.handleCloseGameOverDialog.bind(this)}
+                />
+                <GameLostDialog
+                    hidden={!this.state.lostDialogOpen}
+                    toggleHideDialog={this.handleCloseGameOverDialog.bind(this)}
+                />
+            </>
         );
     }
 }
