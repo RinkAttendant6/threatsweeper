@@ -209,8 +209,6 @@ export default class GameEngine {
             return false;
         }
 
-        console.log('Auto-reveal activated on square %d %d', x, y);
-
         const { width, height } = this.#level;
 
         const choices = [

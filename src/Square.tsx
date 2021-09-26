@@ -26,23 +26,23 @@ export interface Props {
  */
 export default class Square extends React.Component<Props> {
     render() {
+        const { surroundingMines, displayState } = this.props.squareState;
+
         let contents: string | JSX.Element = {
             [DisplayState.Covered]: '',
-            [DisplayState.Uncovered]: String(
-                this.props.squareState.surroundingMines || ''
-            ),
+            [DisplayState.Uncovered]: String(surroundingMines || ''),
             [DisplayState.Flagged]: <EndPointSolidIcon />,
             [DisplayState.Maybe]: <UnknownSolidIcon />,
             [DisplayState.Detonated]: <BlockedSiteSolid12Icon />,
-        }[this.props.squareState.displayState];
+        }[displayState];
 
         let label: string = {
-            [DisplayState.Covered]: `Node ${this.props.x},${this.props.y}`,
+            [DisplayState.Covered]: `Node ${this.props.x},${this.props.y} - Powered off`,
             [DisplayState.Uncovered]: `Node ${this.props.x},${this.props.y} - ${this.props.squareState.surroundingMines} adjacent threats`,
-            [DisplayState.Flagged]: `Node ${this.props.x},${this.props.y} - Marked as malicious`,
-            [DisplayState.Maybe]: `Node ${this.props.x},${this.props.y} - Marked as potentially malicious`,
+            [DisplayState.Flagged]: `Node ${this.props.x},${this.props.y} - Flagged for quarantine`,
+            [DisplayState.Maybe]: `Node ${this.props.x},${this.props.y} - Maybe quarantine?`,
             [DisplayState.Detonated]: `Node ${this.props.x},${this.props.y} - Compromised`,
-        }[this.props.squareState.displayState];
+        }[displayState];
 
         let className: string = {
             [DisplayState.Covered]: `covered`,
@@ -50,23 +50,23 @@ export default class Square extends React.Component<Props> {
             [DisplayState.Flagged]: `flagged`,
             [DisplayState.Maybe]: `maybe`,
             [DisplayState.Detonated]: `detonated`,
-        }[this.props.squareState.displayState];
+        }[displayState];
 
         // If game is not in progress
         if (!this.props.gameAvailable) {
             // Incorrectly flagged squares
             if (
-                this.props.squareState.displayState === DisplayState.Flagged &&
-                this.props.squareState.surroundingMines !== -1
+                displayState === DisplayState.Flagged &&
+                surroundingMines !== -1
             ) {
-                label = `Node ${this.props.x},${this.props.y} - Falsely marked as malicious`;
+                label = `Node ${this.props.x},${this.props.y} - Falsely quarantined`;
                 className = 'flagged-wrong';
             }
 
             // Undetonated mines
             if (
-                this.props.squareState.displayState === DisplayState.Covered &&
-                this.props.squareState.surroundingMines === -1
+                displayState === DisplayState.Covered &&
+                surroundingMines === -1
             ) {
                 contents = <BlockedSiteIcon />;
                 label = `Node ${this.props.x},${this.props.y} - Contained a threat`;
@@ -81,20 +81,19 @@ export default class Square extends React.Component<Props> {
             >
                 <button
                     type='button'
+                    value={surroundingMines}
                     title={label}
                     aria-label={label}
                     disabled={!this.props.gameAvailable}
                     onClick={
                         this.props.gameAvailable &&
-                        this.props.squareState.displayState ===
-                            DisplayState.Covered
+                        displayState === DisplayState.Covered
                             ? this.props.onClick
                             : undefined
                     }
                     onDoubleClick={
                         this.props.gameAvailable &&
-                        this.props.squareState.displayState ===
-                            DisplayState.Uncovered
+                        displayState === DisplayState.Uncovered
                             ? this.props.onDoubleClick
                             : undefined
                     }
@@ -102,6 +101,12 @@ export default class Square extends React.Component<Props> {
                         this.props.gameAvailable
                             ? this.props.onRightClick
                             : undefined
+                    }
+                    tabIndex={
+                        surroundingMines === 0 &&
+                        displayState === DisplayState.Uncovered
+                            ? -1
+                            : 0
                     }
                 >
                     {contents}

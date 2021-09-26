@@ -214,6 +214,37 @@ export default class Game extends React.Component<unknown, State> {
                     padding: '1em',
                 }}
             >
+                <LevelSelectorPanel
+                    newGameCallback={this.startNewGame.bind(this)}
+                />
+
+                {this.state.game.won && (
+                    <MessageBar
+                        messageBarType={MessageBarType.success}
+                        messageBarIconProps={{
+                            iconName: 'LikeSolid',
+                        }}
+                        isMultiline={false}
+                        dismissButtonAriaLabel='Close'
+                    >
+                        Congratulations! You have correctly identified all the
+                        threats and protected your network.
+                    </MessageBar>
+                )}
+                {this.state.game.lost && (
+                    <MessageBar
+                        messageBarType={MessageBarType.error}
+                        messageBarIconProps={{
+                            iconName: 'Sad',
+                        }}
+                        isMultiline={false}
+                        dismissButtonAriaLabel='Close'
+                    >
+                        You've been pwned! A malware was detonated and your
+                        network has been compromised.
+                    </MessageBar>
+                )}
+
                 <Stack
                     horizontal
                     horizontalAlign='space-around'
@@ -221,9 +252,6 @@ export default class Game extends React.Component<unknown, State> {
                     tokens={{ childrenGap: 'm' }}
                 >
                     <Stack.Item>
-                        <LevelSelectorPanel
-                            newGameCallback={this.startNewGame.bind(this)}
-                        />
                         <div style={{ textAlign: 'center' }}>
                             <p>Time: {this.state.timer} seconds</p>
                             <p>
@@ -231,9 +259,6 @@ export default class Game extends React.Component<unknown, State> {
                                 <b>{this.state.level.mines}</b>
                             </p>
                         </div>
-                    </Stack.Item>
-
-                    <Stack.Item>
                         <GameBoard
                             squares={this.state.game.board}
                             handleSquareClick={this.handleSquareClick}
@@ -243,32 +268,6 @@ export default class Game extends React.Component<unknown, State> {
                             }
                             isGameActive={isGameActive}
                         />
-                        {this.state.game.won && (
-                            <MessageBar
-                                messageBarType={MessageBarType.success}
-                                messageBarIconProps={{
-                                    iconName: 'LikeSolid',
-                                }}
-                                isMultiline={false}
-                                dismissButtonAriaLabel='Close'
-                            >
-                                Congratulations! You have correctly identified
-                                all the threats and protected your network.
-                            </MessageBar>
-                        )}
-                        {this.state.game.lost && (
-                            <MessageBar
-                                messageBarType={MessageBarType.error}
-                                messageBarIconProps={{
-                                    iconName: 'Sad',
-                                }}
-                                isMultiline={false}
-                                dismissButtonAriaLabel='Close'
-                            >
-                                You've been pwned! A malware was detonated and
-                                your network has been compromised.
-                            </MessageBar>
-                        )}
                     </Stack.Item>
                     <HighScoreBoard highscores={this.state.scores} />
                 </Stack>
