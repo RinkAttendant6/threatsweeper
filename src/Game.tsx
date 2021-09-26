@@ -1,9 +1,9 @@
 import React from 'react';
 import GameBoard from './GameBoard';
 import GameEngine, { GameState } from './GameEngine';
+import GameInfo from './GameInfo';
 import GameLostDialog from './GameLostDialog';
 import GameWonDialog from './GameWonDialog';
-import HighScoreBoard from './HighScoreBoard';
 import IGameLevelInterface from './interfaces/IGameLevelInterface';
 import Levels from './Levels';
 import LevelSelectorPanel from './LevelSelectorPanel';
@@ -224,11 +224,12 @@ export default class Game extends React.Component<unknown, State> {
         return (
             <>
                 <Stack
-                    tokens={{ childrenGap: 'm' }}
+                    horizontalAlign='center'
+                    tokens={{ childrenGap: 'm', padding: 's1' }}
                     style={{
                         backgroundColor: 'rgba(255, 255, 255, 0.75)',
-                        padding: '1em',
                     }}
+                    as='main'
                 >
                     <LevelSelectorPanel
                         newGameCallback={this.startNewGame.bind(this)}
@@ -260,8 +261,8 @@ export default class Game extends React.Component<unknown, State> {
                                 isGameActive={isGameActive}
                             />
                         </Stack.Item>
-                        <HighScoreBoard highscores={this.state.scores} />
                     </Stack>
+                    <GameInfo highscores={this.state.scores} />
                 </Stack>
                 <GameWonDialog
                     hidden={!this.state.wonDialogOpen}

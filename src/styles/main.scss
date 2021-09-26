@@ -17,6 +17,14 @@ body {
 
 main {
     margin: 0 auto;
+    max-width: 96vw;
+}
+
+kbd {
+    font-weight: bold;
+    border: medium outset #666;
+    line-height: 2;
+    padding: 0 0.25em;
 }
 
 h1 {
