@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { KeyboardEvent } from 'react';
+import { NavigationDirection } from './GameBoard';
 import ISquareDataInterface, {
     DisplayState,
 } from './interfaces/ISquareDataInterface';
@@ -15,16 +16,84 @@ export interface Props {
     gameAvailable: boolean;
 
     squareState: ISquareDataInterface;
+    isFocused: boolean;
 
-    onClick: (e: React.MouseEvent<HTMLElement>) => void;
-    onRightClick: (e: React.MouseEvent<HTMLElement>) => void;
-    onDoubleClick: (e?: React.MouseEvent<HTMLElement>) => void;
+    onClick: () => void;
+    onRightClick: () => void;
+    onDoubleClick: () => void;
+    onNavigate: (e: KeyboardEvent, direction: NavigationDirection) => void;
 }
 
 /**
  * Class representing a square on the game board
  */
 export default class Square extends React.Component<Props> {
+    /**
+     * Handler for keyboard controls
+     */
+    #handleKeyboardControls(e: KeyboardEvent): void {
+        switch (e.code) {
+            // Click/double-click events
+            case 'Enter':
+            case 'Space':
+                e.preventDefault();
+
+                switch (this.props.squareState.displayState) {
+                    case DisplayState.Covered:
+                        this.props.onClick();
+                        break;
+                    case DisplayState.Uncovered:
+                        this.props.onDoubleClick();
+                        break;
+                }
+                break;
+
+            // Right-click events
+            case 'KeyQ':
+                e.preventDefault();
+                this.props.onRightClick();
+                break;
+
+            // Navigation
+            case 'ArrowUp':
+            case 'KeyW':
+                e.preventDefault();
+                this.props.onNavigate(e, NavigationDirection.Up);
+                break;
+            case 'ArrowDown':
+            case 'KeyS':
+                e.preventDefault();
+                this.props.onNavigate(e, NavigationDirection.Down);
+                break;
+            case 'ArrowLeft':
+            case 'KeyA':
+                e.preventDefault();
+                this.props.onNavigate(e, NavigationDirection.Left);
+                break;
+            case 'ArrowRight':
+            case 'KeyD':
+                e.preventDefault();
+                this.props.onNavigate(e, NavigationDirection.Right);
+                break;
+            case 'Home':
+                e.preventDefault();
+                this.props.onNavigate(e, NavigationDirection.Start);
+                break;
+            case 'End':
+                e.preventDefault();
+                this.props.onNavigate(e, NavigationDirection.End);
+                break;
+            case 'PageUp':
+                e.preventDefault();
+                this.props.onNavigate(e, NavigationDirection.Top);
+                break;
+            case 'PageDown':
+                e.preventDefault();
+                this.props.onNavigate(e, NavigationDirection.Bottom);
+                break;
+        }
+    }
+
     render() {
         const { surroundingMines, displayState } = this.props.squareState;
 
@@ -80,6 +149,9 @@ export default class Square extends React.Component<Props> {
                 className={className || ''}
             >
                 <button
+                    ref={(element) =>
+                        element && this.props.isFocused && element.focus()
+                    }
                     type='button'
                     value={surroundingMines}
                     title={label}
@@ -100,6 +172,11 @@ export default class Square extends React.Component<Props> {
                     onContextMenu={
                         this.props.gameAvailable
                             ? this.props.onRightClick
+                            : undefined
+                    }
+                    onKeyDown={
+                        this.props.gameAvailable
+                            ? this.#handleKeyboardControls.bind(this)
                             : undefined
                     }
                     tabIndex={

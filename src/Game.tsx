@@ -159,13 +159,7 @@ export default class Game extends React.Component<unknown, State> {
     /**
      * Handles the right-click event of a square
      */
-    handleSquareRightClick = (
-        event: React.MouseEvent<HTMLElement>,
-        x: number,
-        y: number
-    ): void => {
-        event.preventDefault();
-
+    handleSquareRightClick = (x: number, y: number): void => {
         if (!this.state.gameInProgress) {
             this.setState({ gameInProgress: true }, () => this.#startTimer());
         }
@@ -208,7 +202,8 @@ export default class Game extends React.Component<unknown, State> {
         );
 
         return (
-            <div
+            <Stack
+                tokens={{ childrenGap: 'm' }}
                 style={{
                     backgroundColor: 'rgba(255, 255, 255, 0.75)',
                     padding: '1em',
@@ -271,7 +266,7 @@ export default class Game extends React.Component<unknown, State> {
                     </Stack.Item>
                     <HighScoreBoard highscores={this.state.scores} />
                 </Stack>
-            </div>
+            </Stack>
         );
     }
 }
