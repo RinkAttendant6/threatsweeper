@@ -1,5 +1,4 @@
 import React from 'react';
-import { Label } from '@fluentui/react/lib/Label';
 
 export interface Props {
     highscores: number[];
@@ -10,15 +9,16 @@ export interface Props {
  */
 export default class HighScoreBoard extends React.Component<Props> {
     render() {
+        if (this.props.highscores.length === 0) {
+            return <p>No scores yet for this level</p>;
+        }
+
         return (
-            <section>
-                <Label>High scores</Label>
-                <ol>
-                    {this.props.highscores.map((score, key) => (
-                        <li key={key}>{score} seconds</li>
-                    ))}
-                </ol>
-            </section>
+            <ol>
+                {this.props.highscores.map((score, key) => (
+                    <li key={key}>{score} seconds</li>
+                ))}
+            </ol>
         );
     }
 }

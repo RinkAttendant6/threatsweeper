@@ -5,19 +5,19 @@ import GameInfo from './GameInfo';
 import GameLostDialog from './GameLostDialog';
 import GameWonDialog from './GameWonDialog';
 import IGameLevelInterface from './interfaces/IGameLevelInterface';
-import Levels from './Levels';
+import Levels, { LevelName } from './Levels';
 import LevelSelectorPanel from './LevelSelectorPanel';
 import { DisplayState } from './interfaces/ISquareDataInterface';
 import { Stack } from '@fluentui/react/lib/Stack';
 
 export interface State {
-    level: IGameLevelInterface;
+    level: LevelName;
 
     game: GameState;
     timer: number;
 
     gameInProgress: boolean;
-    scores: number[];
+    scores: { [level in LevelName]: number[] };
 
     wonDialogOpen: boolean;
     lostDialogOpen: boolean;
@@ -36,13 +36,16 @@ export default class Game extends React.Component<unknown, State> {
         this.#gameEngine = new GameEngine();
 
         this.state = {
-            level: Levels.EASY,
+            level: 'EASY',
 
             game: this.#gameEngine.gameState,
             timer: 0,
 
             gameInProgress: false,
-            scores: JSON.parse(localStorage.getItem('highscores') ?? '[]'),
+            scores: JSON.parse(
+                localStorage.getItem('highscores') ??
+                    '{"EASY":[],"MEDIUM":[],"HARD":[]}'
+            ),
 
             wonDialogOpen: false,
             lostDialogOpen: false,
@@ -53,7 +56,7 @@ export default class Game extends React.Component<unknown, State> {
      * Initializes a game
      */
     initializeGame(): void {
-        this.#gameEngine.initialize(this.state.level);
+        this.#gameEngine.initialize(Levels[this.state.level]);
 
         this.setState({
             game: this.#gameEngine.gameState,
@@ -64,7 +67,7 @@ export default class Game extends React.Component<unknown, State> {
     /**
      * Starts a new game
      */
-    startNewGame(level: IGameLevelInterface = Levels.EASY): void {
+    startNewGame(level: LevelName = 'EASY'): void {
         if (
             this.state.gameInProgress &&
             !window.confirm('Are you sure you want to start a new game?')
@@ -102,9 +105,7 @@ export default class Game extends React.Component<unknown, State> {
     }
 
     private tick() {
-        this.setState((prevState) =>
-            this.setState({ timer: prevState.timer + 1 })
-        );
+        this.setState((prevState) => ({ timer: prevState.timer + 1 }));
     }
 
     /**
@@ -133,9 +134,12 @@ export default class Game extends React.Component<unknown, State> {
         this.#stopTimer();
 
         this.setState((prevState) => {
-            const scores = [...prevState.scores, prevState.timer]
+            const scores = prevState.scores;
+            const levelScores = [...scores[prevState.level], prevState.timer]
                 .sort((a, b) => a - b)
                 .slice(0, 10);
+
+            scores[prevState.level] = levelScores;
 
             localStorage.setItem('highscores', JSON.stringify(scores));
 
@@ -246,7 +250,7 @@ export default class Game extends React.Component<unknown, State> {
                                 <p>Time: {this.state.timer} seconds</p>
                                 <p>
                                     Flagged threats: <b>{numberOfFlags}</b> of{' '}
-                                    <b>{this.state.level.mines}</b>
+                                    <b>{Levels[this.state.level].mines}</b>
                                 </p>
                             </div>
                             <GameBoard

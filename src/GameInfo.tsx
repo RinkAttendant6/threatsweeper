@@ -1,5 +1,6 @@
 import React from 'react';
 import HighScoreBoard from './HighScoreBoard';
+import { LevelName } from './Levels';
 import { Label } from '@fluentui/react/lib/Label';
 import { Pivot, PivotItem } from '@fluentui/react/lib/Pivot';
 import { Stack } from '@fluentui/react/lib/Stack';
@@ -10,7 +11,7 @@ import {
 } from '@fluentui/react-icons-mdl2';
 
 export interface Props {
-    highscores: number[];
+    highscores: { [level in LevelName]: number[] };
 }
 
 export default class GameInfo extends React.Component<Props> {
@@ -164,7 +165,24 @@ export default class GameInfo extends React.Component<Props> {
                     </Stack>
                 </PivotItem>
                 <PivotItem headerText='High scores'>
-                    <HighScoreBoard highscores={this.props.highscores} />
+                    <Stack
+                        horizontal
+                        wrap
+                        tokens={{ childrenGap: 's1', padding: 'm' }}
+                    >
+                        {(['EASY', 'MEDIUM', 'HARD'] as LevelName[]).map(
+                            (level) => (
+                                <Stack.Item style={{ flexBasis: '30%' }}>
+                                    <Text variant='large'>{level}</Text>
+                                    <HighScoreBoard
+                                        highscores={
+                                            this.props.highscores[level]
+                                        }
+                                    />
+                                </Stack.Item>
+                            )
+                        )}
+                    </Stack>
                 </PivotItem>
                 <PivotItem headerText='Achievements'>
                     <Label>TODO</Label>

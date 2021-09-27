@@ -1,6 +1,8 @@
 import Level from './interfaces/IGameLevelInterface';
 
-const Levels: { [key: string]: Level } = {
+export type LevelName = 'EASY' | 'MEDIUM' | 'HARD';
+
+const Levels: { [level in LevelName]: Level } = {
     EASY: {
         width: 9,
         height: 9,
