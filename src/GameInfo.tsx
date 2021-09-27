@@ -164,7 +164,7 @@ export default class GameInfo extends React.Component<Props> {
                         </Stack.Item>
                     </Stack>
                 </PivotItem>
-                <PivotItem headerText='High scores'>
+                <PivotItem headerText='High scores' className='highScorePanel'>
                     <Stack
                         horizontal
                         wrap

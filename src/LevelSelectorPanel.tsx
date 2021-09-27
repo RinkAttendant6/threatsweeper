@@ -1,4 +1,3 @@
-import IGameLevelInterface from './interfaces/IGameLevelInterface';
 import Levels from './Levels';
 import React from 'react';
 import { DefaultButton } from '@fluentui/react/lib/Button';

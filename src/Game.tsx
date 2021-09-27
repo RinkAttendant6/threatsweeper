@@ -4,7 +4,6 @@ import GameEngine, { GameState } from './GameEngine';
 import GameInfo from './GameInfo';
 import GameLostDialog from './GameLostDialog';
 import GameWonDialog from './GameWonDialog';
-import IGameLevelInterface from './interfaces/IGameLevelInterface';
 import Levels, { LevelName } from './Levels';
 import LevelSelectorPanel from './LevelSelectorPanel';
 import { DisplayState } from './interfaces/ISquareDataInterface';

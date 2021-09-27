@@ -156,3 +156,39 @@ td {
     background: radial-gradient(gold, lightyellow) no-repeat yellow;
     border-radius: 2px;
 }
+
+.highScorePanel {
+    ol {
+        padding-left: 0.5em;
+        counter-reset: highscores;
+        list-style-type: none;
+
+        li {
+            counter-increment: highscores;
+            margin-bottom: 0.5em;
+            border-top: thin solid #aaa;
+
+            &:hover {
+                background-color: #ddd;
+            }
+
+            &:first-child {
+                font-weight: bold;
+            }
+
+            &::before {
+                content: counter(highscores);
+                font-weight: normal;
+                text-align: center;
+                background-color: #333;
+                color: white;
+                display: inline-block;
+                width: 2ch;
+                padding: 0 0.5em;
+                margin-right: 0.25em;
+                border: thin solid #aaa;
+                border-top: 0;
+            }
+        }
+    }
+}
