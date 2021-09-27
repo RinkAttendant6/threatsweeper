@@ -50,6 +50,7 @@ export default class LevelSelectorPanel extends React.Component<Props> {
                     <Text>Choose network size:</Text>
                     {Object.entries(buttonLabels).map(([level, text]) => (
                         <TooltipHost
+                            key={level}
                             tooltipProps={this.#getLevelDescriptionTooltipProps(
                                 level
                             )}
