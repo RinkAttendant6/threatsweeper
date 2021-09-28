@@ -17,14 +17,7 @@ export interface Props {
 export default class GameInfo extends React.Component<Props> {
     render() {
         return (
-            <Pivot
-                style={{
-                    backgroundColor: 'rgba(255, 255, 255, 0.75)',
-                    width: '100%',
-                    maxWidth: '40rem',
-                    padding: '0 0.5em',
-                }}
-            >
+            <Pivot className='gameInfo shadowUtil'>
                 <PivotItem headerText='Background (story)'>
                     <Text>
                         <p>
@@ -82,8 +75,13 @@ export default class GameInfo extends React.Component<Props> {
                     </Text>
                 </PivotItem>
                 <PivotItem headerText='Controls'>
-                    <Stack horizontal tokens={{ childrenGap: 's1' }}>
-                        <Stack.Item>
+                    <Stack
+                        horizontal
+                        horizontalAlign='space-between'
+                        wrap
+                        tokens={{ childrenGap: 's1' }}
+                    >
+                        <Stack.Item style={{ flexBasis: '45%' }}>
                             <Label>
                                 <KeyboardClassicIcon
                                     style={{
@@ -137,7 +135,7 @@ export default class GameInfo extends React.Component<Props> {
                                 <dd>Navigate to bottom of column</dd>
                             </dl>
                         </Stack.Item>
-                        <Stack.Item>
+                        <Stack.Item style={{ flexBasis: '45%' }}>
                             <Label>
                                 <TouchPointerIcon
                                     style={{

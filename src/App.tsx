@@ -1,16 +1,16 @@
 import React from 'react';
 import Game from './Game';
-import { Stack } from '@fluentui/react/lib/Stack';
+import { Text } from '@fluentui/react/lib/Text';
 
 export default class App extends React.Component {
     public render() {
         return (
-            <Stack horizontalAlign='center'>
-                <header>
-                    <h1>EOG Threat Hunt Minesweeper</h1>
-                </header>
+            <>
+                <Text as='h1' variant='xxLarge'>
+                    Threatsweeper
+                </Text>
                 <Game />
-            </Stack>
+            </>
         );
     }
 }

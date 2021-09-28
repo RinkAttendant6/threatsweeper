@@ -227,11 +227,8 @@ export default class Game extends React.Component<unknown, State> {
         return (
             <>
                 <Stack
-                    horizontalAlign='center'
+                    horizontalAlign='stretch'
                     tokens={{ childrenGap: 'm', padding: 's1' }}
-                    style={{
-                        backgroundColor: 'rgba(255, 255, 255, 0.75)',
-                    }}
                     as='main'
                 >
                     <LevelSelectorPanel
@@ -245,13 +242,6 @@ export default class Game extends React.Component<unknown, State> {
                         tokens={{ childrenGap: 'm' }}
                     >
                         <Stack.Item>
-                            <div style={{ textAlign: 'center' }}>
-                                <p>Time: {this.state.timer} seconds</p>
-                                <p>
-                                    Flagged threats: <b>{numberOfFlags}</b> of{' '}
-                                    <b>{Levels[this.state.level].mines}</b>
-                                </p>
-                            </div>
                             <GameBoard
                                 squares={this.state.game.board}
                                 handleSquareClick={this.handleSquareClick}
@@ -263,6 +253,21 @@ export default class Game extends React.Component<unknown, State> {
                                 }
                                 isGameActive={isGameActive}
                             />
+                            <Stack
+                                horizontal
+                                horizontalAlign='space-around'
+                                style={{
+                                    textAlign: 'center',
+                                    padding: '0.25em 0.5em',
+                                }}
+                                className='shadowUtil'
+                            >
+                                <p>Time: {this.state.timer} seconds</p>
+                                <p>
+                                    Flagged threats: <b>{numberOfFlags}</b> of{' '}
+                                    <b>{Levels[this.state.level].mines}</b>
+                                </p>
+                            </Stack>
                         </Stack.Item>
                     </Stack>
                     <GameInfo highscores={this.state.scores} />

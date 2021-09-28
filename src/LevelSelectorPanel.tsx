@@ -46,7 +46,7 @@ export default class LevelSelectorPanel extends React.Component<Props> {
             <fieldset>
                 <legend>New game</legend>
                 <Stack horizontal tokens={{ childrenGap: 's1' }}>
-                    <Text>Choose network size:</Text>
+                    <Text>Network size:</Text>
                     {Object.entries(buttonLabels).map(([level, text]) => (
                         <TooltipHost
                             key={level}

@@ -1,4 +1,4 @@
-# EOG Threat Hunt Minesweeper
+# Threatsweeper
 
 A game I developed to practise using the React JavaScript framework.
 
