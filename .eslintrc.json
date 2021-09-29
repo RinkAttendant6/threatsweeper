@@ -1,13 +1,12 @@
 {
     "root": true,
     "parser": "@typescript-eslint/parser",
-    "plugins": [
-        "@typescript-eslint"
-    ],
+    "plugins": ["@typescript-eslint"],
     "extends": [
         "eslint:recommended",
         "plugin:@typescript-eslint/recommended",
-        "plugin:prettier/recommended"
+        "plugin:prettier/recommended",
+        "plugin:react/recommended"
     ],
     "rules": {
         "prefer-const": ["off"],
@@ -23,6 +22,17 @@
                     "shouldComponentUpdate"
                 ]
             }
-        ]
+        ],
+
+        // React
+        "react/button-has-type": ["error"],
+        "react/no-multi-comp": ["error"],
+        "react/no-unsafe": ["error"],
+        "react/prefer-es6-class": ["error"]
+    },
+    "settings": {
+        "react": {
+            "version": "detect"
+        }
     }
 }
