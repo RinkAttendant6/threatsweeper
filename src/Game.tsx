@@ -89,7 +89,9 @@ export default class Game extends React.Component<unknown, State> {
      * Starts a timer
      */
     #startTimer(): void {
-        this.#timerID = window.setInterval(() => this.tick(), 1000);
+        if (this.#timerID === null) {
+            this.#timerID = window.setInterval(() => this.tick(), 1000);
+        }
     }
 
     /**
@@ -135,6 +137,7 @@ export default class Game extends React.Component<unknown, State> {
         this.setState((prevState) => {
             const scores = prevState.scores;
             const levelScores = [...scores[prevState.level], prevState.timer]
+                .filter((score) => score > 0)
                 .sort((a, b) => a - b)
                 .slice(0, 10);
 
@@ -165,8 +168,10 @@ export default class Game extends React.Component<unknown, State> {
      * Handles the click event of a square
      */
     handleSquareClick = (x: number, y: number): void => {
+        this.#startTimer();
+
         if (!this.state.gameInProgress) {
-            this.setState({ gameInProgress: true }, () => this.#startTimer());
+            this.setState({ gameInProgress: true });
         }
 
         if (this.#gameEngine.uncover(x, y)) {
@@ -184,8 +189,10 @@ export default class Game extends React.Component<unknown, State> {
      * Handles the right-click event of a square
      */
     handleSquareRightClick = (x: number, y: number): void => {
+        this.#startTimer();
+
         if (!this.state.gameInProgress) {
-            this.setState({ gameInProgress: true }, () => this.#startTimer());
+            this.setState({ gameInProgress: true });
         }
 
         if (this.#gameEngine.toggleFlag(x, y)) {
@@ -197,6 +204,8 @@ export default class Game extends React.Component<unknown, State> {
      * Handles the double-click event of a square
      */
     handleSquareDoubleClick = (x: number, y: number): void => {
+        this.#startTimer();
+
         if (this.#gameEngine.autoUncoverAdjacent(x, y)) {
             this.setState({ game: this.#gameEngine.gameState }, () => {
                 if (this.state.game.won) {
