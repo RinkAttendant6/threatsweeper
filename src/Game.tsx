@@ -2,6 +2,7 @@ import React from 'react';
 import GameBoard from './GameBoard';
 import GameEngine, { GameState } from './GameEngine';
 import GameInfo from './GameInfo';
+import GameStatus from './GameStatus';
 import GameLostDialog from './GameLostDialog';
 import GameWonDialog from './GameWonDialog';
 import Levels, { LevelName } from './Levels';
@@ -243,41 +244,23 @@ export default class Game extends React.Component<unknown, State> {
                     <LevelSelectorPanel
                         newGameCallback={this.startNewGame.bind(this)}
                     />
-
+                    <GameBoard
+                        squares={this.state.game.board}
+                        handleSquareClick={this.handleSquareClick}
+                        handleSquareRightClick={this.handleSquareRightClick}
+                        handleSquareDoubleClick={this.handleSquareDoubleClick}
+                        isGameActive={isGameActive}
+                    />
                     <Stack
                         horizontal
                         horizontalAlign='space-around'
-                        wrap
-                        tokens={{ childrenGap: 'm' }}
+                        className='gameStatus shadowUtil'
                     >
-                        <Stack.Item>
-                            <GameBoard
-                                squares={this.state.game.board}
-                                handleSquareClick={this.handleSquareClick}
-                                handleSquareRightClick={
-                                    this.handleSquareRightClick
-                                }
-                                handleSquareDoubleClick={
-                                    this.handleSquareDoubleClick
-                                }
-                                isGameActive={isGameActive}
-                            />
-                            <Stack
-                                horizontal
-                                horizontalAlign='space-around'
-                                style={{
-                                    textAlign: 'center',
-                                    padding: '0.25em 0.5em',
-                                }}
-                                className='shadowUtil'
-                            >
-                                <p>Time: {this.state.timer} seconds</p>
-                                <p>
-                                    Flagged threats: <b>{numberOfFlags}</b> of{' '}
-                                    <b>{Levels[this.state.level].mines}</b>
-                                </p>
-                            </Stack>
-                        </Stack.Item>
+                        <GameStatus
+                            time={this.state.timer}
+                            flags={numberOfFlags}
+                            mines={Levels[this.state.level].mines}
+                        />
                     </Stack>
                     <GameInfo highscores={this.state.scores} />
                 </Stack>
