@@ -233,6 +233,9 @@ export default class Game extends React.Component<unknown, State> {
 
         const boardStatus = this.#computeBoardStatus();
         const numberOfFlags = boardStatus[DisplayState.Flagged];
+        const numberRevealed = boardStatus[DisplayState.Uncovered];
+        const boardSize =
+            Levels[this.state.level].height * Levels[this.state.level].width;
 
         return (
             <>
@@ -258,6 +261,8 @@ export default class Game extends React.Component<unknown, State> {
                     >
                         <GameStatus
                             time={this.state.timer}
+                            size={boardSize}
+                            revealed={numberRevealed}
                             flags={numberOfFlags}
                             mines={Levels[this.state.level].mines}
                         />
