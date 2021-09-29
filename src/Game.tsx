@@ -254,19 +254,13 @@ export default class Game extends React.Component<unknown, State> {
                         handleSquareDoubleClick={this.handleSquareDoubleClick}
                         isGameActive={isGameActive}
                     />
-                    <Stack
-                        horizontal
-                        horizontalAlign='space-around'
-                        className='gameStatus shadowUtil'
-                    >
-                        <GameStatus
-                            time={this.state.timer}
-                            size={boardSize}
-                            revealed={numberRevealed}
-                            flags={numberOfFlags}
-                            mines={Levels[this.state.level].mines}
-                        />
-                    </Stack>
+                    <GameStatus
+                        time={this.state.timer}
+                        size={boardSize}
+                        revealed={numberRevealed}
+                        flags={numberOfFlags}
+                        mines={Levels[this.state.level].mines}
+                    />
                     <GameInfo highscores={this.state.scores} />
                 </Stack>
                 <GameWonDialog

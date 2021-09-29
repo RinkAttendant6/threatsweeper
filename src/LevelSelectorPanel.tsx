@@ -3,7 +3,7 @@ import React from 'react';
 import { DefaultButton } from '@fluentui/react/lib/Button';
 import { Stack } from '@fluentui/react/lib/Stack';
 import { Text } from '@fluentui/react/lib/Text';
-import { ITooltipProps, TooltipHost } from '@fluentui/react';
+import { ITooltipProps, TooltipHost } from '@fluentui/react/lib/Tooltip';
 
 export interface Props {
     newGameCallback: (level: LevelName) => void;
@@ -45,7 +45,7 @@ export default class LevelSelectorPanel extends React.Component<Props> {
         return (
             <fieldset>
                 <legend>New game</legend>
-                <Stack horizontal tokens={{ childrenGap: 's1' }}>
+                <Stack horizontal wrap tokens={{ childrenGap: 's1' }}>
                     <Text>Network size:</Text>
                     {Object.entries(buttonLabels).map(([level, text]) => (
                         <TooltipHost

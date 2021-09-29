@@ -17,7 +17,7 @@ export interface Props {
 export default class GameInfo extends React.Component<Props> {
     render() {
         return (
-            <Pivot className='gameInfo shadowUtil'>
+            <Pivot className='gameInfo shadowUtil' overflowBehavior='menu'>
                 <PivotItem headerText='Background (story)'>
                     <Text>
                         <p>
@@ -165,12 +165,13 @@ export default class GameInfo extends React.Component<Props> {
                 <PivotItem headerText='High scores' className='highScorePanel'>
                     <Stack
                         horizontal
+                        horizontalAlign='stretch'
                         wrap
                         tokens={{ childrenGap: 's1', padding: 'm' }}
                     >
                         {(['EASY', 'MEDIUM', 'HARD'] as LevelName[]).map(
                             (level) => (
-                                <Stack.Item style={{ flexBasis: '30%' }}>
+                                <Stack.Item style={{ flex: '1' }} key={level}>
                                     <Text variant='large'>{level}</Text>
                                     <HighScoreBoard
                                         highscores={

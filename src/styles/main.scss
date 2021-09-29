@@ -7,7 +7,6 @@ body {
     margin: 0;
     padding: 0;
     font-family: sans-serif;
-    min-height: 100vh;
 }
 
 body {
@@ -15,9 +14,8 @@ body {
 }
 
 #app {
-    margin: 2rem auto;
-    max-width: 65rem;
-    padding: 0 3rem;
+    margin: 0.5rem auto;
+    padding: 0 0.5rem;
 }
 
 main {
@@ -37,8 +35,8 @@ table {
     margin-right: auto;
     background-color: rgba(255, 255, 255, 0.2);
     border-spacing: 0;
-    border: thick double #333;
-    padding: 0.25em;
+    border: thin solid #333;
+    padding: 0;
 }
 
 td {
@@ -162,6 +160,10 @@ td {
     text-align: center;
     padding: 0 0.5em;
     width: 100%;
+
+    p {
+        margin: 0.75em 1em;
+    }
 }
 
 .gameInfo {
@@ -172,6 +174,7 @@ td {
 
 .highScorePanel {
     ol {
+        min-width: 12rem;
         padding-left: 0.5em;
         counter-reset: highscores;
         list-style-type: none;
@@ -203,5 +206,19 @@ td {
                 border-top: 0;
             }
         }
+    }
+}
+
+@media screen and (min-device-width: 65rem) {
+    #app {
+        max-width: 65rem;
+        margin: 2rem auto;
+        padding: 0 3rem;
+    }
+
+    table {
+        border-width: thick;
+        border-style: double;
+        padding: 0.25em;
     }
 }
