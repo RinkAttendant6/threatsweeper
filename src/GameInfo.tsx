@@ -21,25 +21,25 @@ export default class GameInfo extends React.Component<Props> {
                 <PivotItem headerText='Background (story)'>
                     <Text>
                         <p>
-                            Upon receiving a notice from your company's{' '}
+                            Upon receiving a notice from your company’s{' '}
                             <abbr title='Internet Service Provider'>ISP</abbr>{' '}
                             about outgoing connections to a{' '}
                             <a
                                 href='https://en.wikipedia.org/wiki/Botnet'
                                 target='_blank'
-                                rel='noopener'
+                                rel='noreferrer noopener'
                             >
                                 malware command-and-control centre
                             </a>
                             , every network-connected device was shut down by
-                            your company's overzealous system analysts.
+                            your company’s overzealous system analysts.
                         </p>
                         <p>
                             Unfortunately, the suspected{' '}
                             <a
                                 href='https://en.wikipedia.org/wiki/Ransomware'
                                 target='_blank'
-                                rel='noopener'
+                                rel='noreferrer noopener'
                             >
                                 ransomware
                             </a>{' '}
@@ -47,17 +47,17 @@ export default class GameInfo extends React.Component<Props> {
                             startup.
                         </p>
                         <p>
-                            You're a cybersecurity analyst in the{' '}
+                            You are a cybersecurity analyst in the{' '}
                             <a
                                 href='https://en.wikipedia.org/wiki/Information_security_operations_center'
                                 target='_blank'
-                                rel='noopener'
+                                rel='noreferrer noopener'
                             >
                                 Security Operations Centre
                             </a>{' '}
                             tasked with remediating this security incident. Can
                             you quarantine all the threats without having your
-                            company's data held hostage?
+                            company’s data held hostage?
                         </p>
                     </Text>
                 </PivotItem>

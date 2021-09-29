@@ -38,7 +38,7 @@ export default class GameWonDialog extends React.Component<Props> {
                             <a
                                 href='https://getcybersafe.gc.ca/en'
                                 target='_blank'
-                                rel='noopener'
+                                rel='noreferrer noopener'
                             >
                                 Learn how to stay safe online.
                             </a>

@@ -27,7 +27,11 @@ export default class LevelSelectorPanel extends React.Component<Props> {
                 <>
                     {Levels[level].width} × {Levels[level].height} board size.{' '}
                     {descriptions[level]}{' '}
-                    <a href='https://en.wikipedia.org/wiki/Classful_network'>
+                    <a
+                        href='https://en.wikipedia.org/wiki/Classful_network'
+                        target='_blank'
+                        rel='noreferrer noopener'
+                    >
                         Learn more about classful networks.
                     </a>
                 </>

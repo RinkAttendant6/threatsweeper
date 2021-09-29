@@ -36,7 +36,7 @@ export default class GameLostDialog extends React.Component<Props> {
                 <a
                     href='https://en.wikipedia.org/wiki/Zero-day_(computing)'
                     target='_blank'
-                    rel='noopener'
+                    rel='noreferrer noopener'
                 >
                     0-day exploit
                 </a>{' '}
@@ -68,7 +68,7 @@ export default class GameLostDialog extends React.Component<Props> {
                             <a
                                 href='https://getcybersafe.gc.ca/en'
                                 target='_blank'
-                                rel='noopener'
+                                rel='noreferrer noopener'
                             >
                                 Learn how to stay safe online.
                             </a>
