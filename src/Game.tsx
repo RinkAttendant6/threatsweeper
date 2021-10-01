@@ -231,6 +231,12 @@ export default class Game extends React.Component<unknown, State> {
         if (this.#gameEngine.toggleFlag(x, y)) {
             this.setState({ game: this.#gameEngine.gameState });
         }
+
+        this.#achievementsEngine.evaluate(
+            this.#gameEngine.gameState,
+            this.state.timer
+        );
+        this.#achievementsEngine.persist();
     };
 
     /**
@@ -248,6 +254,12 @@ export default class Game extends React.Component<unknown, State> {
                 }
             });
         }
+
+        this.#achievementsEngine.evaluate(
+            this.#gameEngine.gameState,
+            this.state.timer
+        );
+        this.#achievementsEngine.persist();
     };
 
     /**
