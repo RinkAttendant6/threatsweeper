@@ -1,18 +1,18 @@
 {
-    "name": "react-minesweeper",
-    "version": "0.0.1",
-    "description": "Minesweeper game built using React framework",
+    "name": "threatsweeper",
+    "version": "1.0.0",
+    "description": "Cybersecurity-themed minesweeper game built with TypeScript using React framework",
     "source": "index.html",
     "repository": {
         "type": "git",
-        "url": "github:RinkAttendant6/react-minesweeper"
+        "url": "github:RinkAttendant6/threatsweeper"
     },
     "scripts": {
         "build": "parcel build --public-url ./",
         "start": "parcel serve --port=8080",
         "prepare": "husky install"
     },
-    "author": "",
+    "author": "Vincent Diep",
     "license": "MPL-2.0",
     "dependencies": {
         "@babel/polyfill": "^7.12",
