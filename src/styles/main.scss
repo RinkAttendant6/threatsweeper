@@ -256,13 +256,16 @@ td {
     .achievementTitle {
         margin: 0;
     }
+
+    .achievementDescription {
+        font-size: smaller;
+    }
 }
 
 @media screen and (min-width: 65rem) {
     #app {
         max-width: 65rem;
         margin: 2rem auto;
-        padding: 0 3rem;
     }
 
     table {
