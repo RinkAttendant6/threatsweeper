@@ -39,7 +39,7 @@ export default class AchievementsEngine {
             weakestLink: {
                 name: 'Weakest Link in the Chain',
                 description:
-                    'Get pwned while booting the last three devices of a class A network',
+                    'Get pwned while booting the last three devices of a class B or class A network',
                 link: 'https://blog.avast.com/weakest-link-in-security-avast',
                 secret: false,
                 achievedOn: null,
@@ -193,6 +193,7 @@ export default class AchievementsEngine {
 
         this.#achievements.weakestLink.achievedOn ||=
             lost &&
+            [Levels.MEDIUM, Levels.HARD].includes(level) &&
             totalSquares -
                 flatBoard.filter(
                     (square) =>
