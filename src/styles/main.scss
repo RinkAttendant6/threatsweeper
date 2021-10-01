@@ -13,6 +13,11 @@ body {
     background-color: #faf9f8;
 }
 
+a:link,
+a:visited {
+    color: #005a9f;
+}
+
 #app {
     margin: 0.5rem auto;
     padding: 0 0.5rem;
@@ -250,10 +255,6 @@ td {
 
     .achievementTitle {
         margin: 0;
-
-        a:visited {
-            color: blue;
-        }
     }
 }
 
