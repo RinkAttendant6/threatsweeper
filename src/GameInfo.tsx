@@ -1,6 +1,7 @@
 import React from 'react';
 import AchievementsEngine from './AchievementsEngine';
 import AchievementsPanel from './AchievementsPanel';
+import ErrorBoundary from './ErrorBoundary';
 import GameControls from './GameControls';
 import HighScoreBoard from './HighScoreBoard';
 import { LevelName } from './Levels';
@@ -77,28 +78,37 @@ export default class GameInfo extends React.Component<Props> {
                     <GameControls />
                 </PivotItem>
                 <PivotItem headerText='High scores' className='highScorePanel'>
-                    <Stack
-                        horizontal
-                        horizontalAlign='stretch'
-                        wrap
-                        tokens={{ childrenGap: 's1', padding: 'm' }}
-                    >
-                        {(['EASY', 'MEDIUM', 'HARD'] as LevelName[]).map(
-                            (level) => (
-                                <Stack.Item style={{ flex: '1' }} key={level}>
-                                    <Text variant='large'>{level}</Text>
-                                    <HighScoreBoard
-                                        highscores={
-                                            this.props.highscores[level]
-                                        }
-                                    />
-                                </Stack.Item>
-                            )
-                        )}
-                    </Stack>
+                    <ErrorBoundary>
+                        <Stack
+                            horizontal
+                            horizontalAlign='stretch'
+                            wrap
+                            tokens={{ childrenGap: 's1', padding: 'm' }}
+                        >
+                            {(['EASY', 'MEDIUM', 'HARD'] as LevelName[]).map(
+                                (level) => (
+                                    <Stack.Item
+                                        style={{ flex: '1' }}
+                                        key={level}
+                                    >
+                                        <Text variant='large'>{level}</Text>
+                                        <HighScoreBoard
+                                            highscores={
+                                                this.props.highscores[level]
+                                            }
+                                        />
+                                    </Stack.Item>
+                                )
+                            )}
+                        </Stack>
+                    </ErrorBoundary>
                 </PivotItem>
                 <PivotItem headerText='Achievements'>
-                    <AchievementsPanel engine={this.props.achievementsEngine} />
+                    <ErrorBoundary>
+                        <AchievementsPanel
+                            engine={this.props.achievementsEngine}
+                        />
+                    </ErrorBoundary>
                 </PivotItem>
             </Pivot>
         );
