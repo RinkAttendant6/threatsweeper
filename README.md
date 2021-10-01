@@ -2,15 +2,15 @@
 
 A web-based cybersecurity-themed minesweeper game.
 
-![GitHub package.json version](https://img.shields.io/github/package-json/v/RinkAttendant6/threatsweeper?style=flat-square)
-![GitHub deployments](https://img.shields.io/github/deployments/RinkAttendant6/threatsweeper/github-pages?label=deployment%20status&style=flat-square)
+[![GitHub package.json version](https://img.shields.io/github/package-json/v/RinkAttendant6/threatsweeper?style=flat-square)](https://github.com/RinkAttendant6/threatsweeper/blob/main/package.json)
+[![GitHub deployments](https://img.shields.io/github/deployments/RinkAttendant6/threatsweeper/github-pages?label=deployment%20status&style=flat-square)](https://github.com/RinkAttendant6/threatsweeper/actions/workflows/deploy.yml)
 
-![GitHub language count](https://img.shields.io/github/languages/count/RinkAttendant6/threatsweeper?style=flat-square)
-![GitHub top language](https://img.shields.io/github/languages/top/RinkAttendant6/threatsweeper?style=flat-square)
-![Snyk Vulnerabilities for GitHub Repo](https://img.shields.io/snyk/vulnerabilities/github/RinkAttendant6/threatsweeper?style=flat-square)
-![GitHub repo size](https://img.shields.io/github/repo-size/RinkAttendant6/threatsweeper?style=flat-square)
-![GitHub](https://img.shields.io/github/license/RinkAttendant6/threatsweeper?style=flat-square)
-![GitHub Repo stars](https://img.shields.io/github/stars/RinkAttendant6/threatsweeper?style=social)
+[![GitHub language count](https://img.shields.io/github/languages/count/RinkAttendant6/threatsweeper?style=flat-square)](https://github.com/RinkAttendant6/threatsweeper/search?l=TypeScript)
+[![GitHub top language](https://img.shields.io/github/languages/top/RinkAttendant6/threatsweeper?style=flat-square)](https://github.com/RinkAttendant6/threatsweeper/search?l=TypeScript)
+[![Snyk Vulnerabilities for GitHub Repo](https://img.shields.io/snyk/vulnerabilities/github/RinkAttendant6/threatsweeper?style=flat-square)](https://app.snyk.io/org/rinkattendant6-github-marketplace/project/d3c20bb2-1a01-4aad-ae0f-f1264e84844f)
+[![GitHub repo size](https://img.shields.io/github/repo-size/RinkAttendant6/threatsweeper?style=flat-square)](https://github.com/RinkAttendant6/threatsweeper)
+[![GitHub](https://img.shields.io/github/license/RinkAttendant6/threatsweeper?style=flat-square)](https://github.com/RinkAttendant6/threatsweeper/blob/main/LICENSE.md)
+[![GitHub Repo stars](https://img.shields.io/github/stars/RinkAttendant6/threatsweeper?style=social)](https://github.com/RinkAttendant6/threatsweeper/stargazers)
 
 ## ▶️ Play
 
