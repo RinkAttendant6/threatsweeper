@@ -267,7 +267,13 @@ export default class AchievementsEngine {
                 ? date
                 : null;
 
-        this.#achievements.coffeeBreak.achievedOn ||= null;
+        this.#achievements.coffeeBreak.achievedOn ||=
+            game.paused &&
+            flatBoard.some(
+                (square) => square.displayState === DisplayState.Uncovered
+            )
+                ? date
+                : null;
     }
 
     list(): Record<string, Achievement> {

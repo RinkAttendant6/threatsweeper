@@ -1,4 +1,5 @@
 import React from 'react';
+import PageVisibility from 'react-page-visibility';
 import AchievementsEngine from './AchievementsEngine';
 import GameBoard from './GameBoard';
 import GameEngine, { GameState } from './GameEngine';
@@ -262,6 +263,25 @@ export default class Game extends React.Component<unknown, State> {
     };
 
     /**
+     * Handles changes in page visibility
+     */
+    handleVisibilityChange = (isVisible: boolean): void => {
+        if (!this.state.gameInProgress) {
+            return;
+        }
+
+        console.debug(isVisible);
+
+        this.#gameEngine.paused = !isVisible;
+
+        if (isVisible) {
+            this.#startTimer();
+        } else {
+            this.#stopTimer();
+        }
+    };
+
+    /**
      * Handles closing the game won/lost dialogs
      */
     handleCloseGameOverDialog(): void {
@@ -281,44 +301,52 @@ export default class Game extends React.Component<unknown, State> {
             Levels[this.state.level].height * Levels[this.state.level].width;
 
         return (
-            <>
-                <Stack
-                    horizontalAlign='stretch'
-                    tokens={{ childrenGap: 'm', padding: 's1' }}
-                    as='main'
-                >
-                    <LevelSelectorPanel
-                        newGameCallback={this.startNewGame.bind(this)}
+            <PageVisibility onChange={this.handleVisibilityChange}>
+                <>
+                    <Stack
+                        horizontalAlign='stretch'
+                        tokens={{ childrenGap: 'm', padding: 's1' }}
+                        as='main'
+                    >
+                        <LevelSelectorPanel
+                            newGameCallback={this.startNewGame.bind(this)}
+                        />
+                        <GameBoard
+                            squares={this.state.game.board}
+                            handleSquareClick={this.handleSquareClick}
+                            handleSquareRightClick={this.handleSquareRightClick}
+                            handleSquareDoubleClick={
+                                this.handleSquareDoubleClick
+                            }
+                            isGameActive={isGameActive}
+                        />
+                        <GameStatus
+                            time={this.state.timer}
+                            size={boardSize}
+                            revealed={numberRevealed}
+                            flags={numberOfFlags}
+                            mines={Levels[this.state.level].mines}
+                        />
+                        <GameInfo
+                            highscores={this.state.scores}
+                            achievementsEngine={this.#achievementsEngine}
+                        />
+                    </Stack>
+                    <GameWonDialog
+                        hidden={!this.state.wonDialogOpen}
+                        toggleHideDialog={this.handleCloseGameOverDialog.bind(
+                            this
+                        )}
                     />
-                    <GameBoard
-                        squares={this.state.game.board}
-                        handleSquareClick={this.handleSquareClick}
-                        handleSquareRightClick={this.handleSquareRightClick}
-                        handleSquareDoubleClick={this.handleSquareDoubleClick}
-                        isGameActive={isGameActive}
+                    <GameLostDialog
+                        hidden={!this.state.lostDialogOpen}
+                        instantLoss={boardStatus[DisplayState.Uncovered] === 0}
+                        toggleHideDialog={this.handleCloseGameOverDialog.bind(
+                            this
+                        )}
                     />
-                    <GameStatus
-                        time={this.state.timer}
-                        size={boardSize}
-                        revealed={numberRevealed}
-                        flags={numberOfFlags}
-                        mines={Levels[this.state.level].mines}
-                    />
-                    <GameInfo
-                        highscores={this.state.scores}
-                        achievementsEngine={this.#achievementsEngine}
-                    />
-                </Stack>
-                <GameWonDialog
-                    hidden={!this.state.wonDialogOpen}
-                    toggleHideDialog={this.handleCloseGameOverDialog.bind(this)}
-                />
-                <GameLostDialog
-                    hidden={!this.state.lostDialogOpen}
-                    instantLoss={boardStatus[DisplayState.Uncovered] === 0}
-                    toggleHideDialog={this.handleCloseGameOverDialog.bind(this)}
-                />
-            </>
+                </>
+            </PageVisibility>
         );
     }
 }

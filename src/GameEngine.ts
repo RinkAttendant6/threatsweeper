@@ -10,12 +10,14 @@ export interface GameState {
     lost: boolean;
     flagsUsed: boolean;
     board: ISquareDataInterface[][];
+    paused?: boolean;
 }
 
 export default class GameEngine {
     #board: ISquareDataInterface[][] = [];
     #won = false;
     #lost = false;
+    paused = false;
 
     #level: IGameLevelInterface = Levels.EASY;
 
@@ -34,6 +36,7 @@ export default class GameEngine {
 
         this.#won = false;
         this.#lost = false;
+        this.paused = false;
         this.#flagsUsed = false;
     }
 
@@ -263,6 +266,7 @@ export default class GameEngine {
             board: this.#board,
             lost: this.#lost,
             won: this.#won,
+            paused: Boolean(this.paused),
             flagsUsed: this.#flagsUsed,
         };
     }
