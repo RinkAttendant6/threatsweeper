@@ -209,7 +209,55 @@ td {
     }
 }
 
-@media screen and (min-device-width: 65rem) {
+.achievementsPanel {
+    display: flex;
+    flex-direction: column;
+    padding-left: 0;
+    list-style-type: none;
+
+    .trophyIcon {
+        font-size: 2em;
+        margin-right: 0.5rem;
+    }
+
+    .notAchieved {
+        .achievementTitle {
+            opacity: 0.8;
+        }
+
+        .trophyIcon,
+        .achievementDescription {
+            opacity: 0.3;
+        }
+
+        &:hover {
+            .trophyIcon,
+            .achievementDescription {
+                opacity: 0.8;
+            }
+        }
+    }
+
+    .achieved {
+        background-color: lightgreen;
+    }
+
+    li {
+        margin-bottom: 1rem;
+        display: flex;
+        padding: 0.25rem;
+    }
+
+    .achievementTitle {
+        margin: 0;
+
+        a:visited {
+            color: blue;
+        }
+    }
+}
+
+@media screen and (min-width: 65rem) {
     #app {
         max-width: 65rem;
         margin: 2rem auto;
@@ -220,5 +268,15 @@ td {
         border-width: thick;
         border-style: double;
         padding: 0.25em;
+    }
+
+    .achievementsPanel {
+        flex-direction: row;
+        flex-wrap: wrap;
+        column-gap: 0.5em;
+
+        li {
+            flex: calc(50% - 0.5em);
+        }
     }
 }

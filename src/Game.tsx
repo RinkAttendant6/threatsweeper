@@ -1,4 +1,5 @@
 import React from 'react';
+import AchievementsEngine from './AchievementsEngine';
 import GameBoard from './GameBoard';
 import GameEngine, { GameState } from './GameEngine';
 import GameInfo from './GameInfo';
@@ -19,6 +20,12 @@ export interface State {
     gameInProgress: boolean;
     scores: { [level in LevelName]: number[] };
 
+    gameCounters: {
+        won: number;
+        lost: number;
+        instantlyLost: number;
+    };
+
     wonDialogOpen: boolean;
     lostDialogOpen: boolean;
 }
@@ -29,10 +36,12 @@ export interface State {
 export default class Game extends React.Component<unknown, State> {
     #timerID: number | null = null;
     #gameEngine: GameEngine;
+    #achievementsEngine: AchievementsEngine;
 
     constructor(props = {}) {
         super(props);
 
+        this.#achievementsEngine = new AchievementsEngine();
         this.#gameEngine = new GameEngine();
 
         this.state = {
@@ -46,6 +55,12 @@ export default class Game extends React.Component<unknown, State> {
                 localStorage.getItem('highscores') ??
                     '{"EASY":[],"MEDIUM":[],"HARD":[]}'
             ),
+            gameCounters: {
+                won: Number(localStorage.getItem('gamesWon')) || 0,
+                lost: Number(localStorage.getItem('gamesLost')) || 0,
+                instantlyLost:
+                    Number(localStorage.getItem('gamesInstantlyLost')) || 0,
+            },
 
             wonDialogOpen: false,
             lostDialogOpen: false,
@@ -130,40 +145,51 @@ export default class Game extends React.Component<unknown, State> {
     }
 
     /**
-     * Handles winning game event
+     * Get the new high score list
+     * @returns number[]
      */
-    handleGameWin = (): void => {
-        this.#stopTimer();
-
-        this.setState((prevState) => {
-            const scores = prevState.scores;
-            const levelScores = [...scores[prevState.level], prevState.timer]
-                .filter((score) => score > 0)
-                .sort((a, b) => a - b)
-                .slice(0, 10);
-
-            scores[prevState.level] = levelScores;
-
-            localStorage.setItem('highscores', JSON.stringify(scores));
-
-            return {
-                wonDialogOpen: true,
-                gameInProgress: false,
-                scores,
-            };
-        });
-    };
+    #computeNewScores(): number[] {
+        return [...this.state.scores[this.state.level], this.state.timer]
+            .filter((score) => score > 0)
+            .sort((a, b) => a - b)
+            .slice(0, 10);
+    }
 
     /**
-     * Handles losing game event
+     * Handles when the game is over
+     * @param win Whether the game was won
      */
-    handleGameLose = (): void => {
+    handleGameOver(win: boolean): void {
         this.#stopTimer();
+
+        const boardStatus = this.#computeBoardStatus();
+        const instantLoss = !win && boardStatus[DisplayState.Uncovered] === 0;
+        let scores = this.state.scores;
+        let counters = this.state.gameCounters;
+
+        if (win) {
+            counters.won++;
+            scores[this.state.level] = this.#computeNewScores();
+            localStorage.setItem('highscores', JSON.stringify(scores));
+            localStorage.setItem('gamesWon', String(counters.won));
+        } else {
+            counters.lost++;
+            counters.instantlyLost += instantLoss ? 1 : 0;
+            localStorage.setItem('gamesLost', String(counters.lost));
+            localStorage.setItem(
+                'gamesInstantlyLost',
+                String(counters.instantlyLost)
+            );
+        }
+
         this.setState({
-            lostDialogOpen: true,
+            wonDialogOpen: win,
+            lostDialogOpen: !win,
             gameInProgress: false,
+            scores,
+            gameCounters: counters,
         });
-    };
+    }
 
     /**
      * Handles the click event of a square
@@ -178,12 +204,18 @@ export default class Game extends React.Component<unknown, State> {
         if (this.#gameEngine.uncover(x, y)) {
             this.setState({ game: this.#gameEngine.gameState }, () => {
                 if (this.state.game.won) {
-                    this.handleGameWin();
+                    this.handleGameOver(true);
                 } else if (this.state.game.lost) {
-                    this.handleGameLose();
+                    this.handleGameOver(false);
                 }
             });
         }
+
+        this.#achievementsEngine.evaluate(
+            this.#gameEngine.gameState,
+            this.state.timer
+        );
+        this.#achievementsEngine.persist();
     };
 
     /**
@@ -210,9 +242,9 @@ export default class Game extends React.Component<unknown, State> {
         if (this.#gameEngine.autoUncoverAdjacent(x, y)) {
             this.setState({ game: this.#gameEngine.gameState }, () => {
                 if (this.state.game.won) {
-                    this.handleGameWin();
+                    this.handleGameOver(true);
                 } else if (this.state.game.lost) {
-                    this.handleGameLose();
+                    this.handleGameOver(false);
                 }
             });
         }
@@ -261,7 +293,10 @@ export default class Game extends React.Component<unknown, State> {
                         flags={numberOfFlags}
                         mines={Levels[this.state.level].mines}
                     />
-                    <GameInfo highscores={this.state.scores} />
+                    <GameInfo
+                        highscores={this.state.scores}
+                        achievementsEngine={this.#achievementsEngine}
+                    />
                 </Stack>
                 <GameWonDialog
                     hidden={!this.state.wonDialogOpen}

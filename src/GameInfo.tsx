@@ -1,14 +1,16 @@
 import React from 'react';
+import AchievementsEngine from './AchievementsEngine';
+import AchievementsPanel from './AchievementsPanel';
 import GameControls from './GameControls';
 import HighScoreBoard from './HighScoreBoard';
 import { LevelName } from './Levels';
-import { Label } from '@fluentui/react/lib/Label';
 import { Pivot, PivotItem } from '@fluentui/react/lib/Pivot';
 import { Stack } from '@fluentui/react/lib/Stack';
 import { Text } from '@fluentui/react/lib/Text';
 
 export interface Props {
     highscores: { [level in LevelName]: number[] };
+    achievementsEngine: AchievementsEngine;
 }
 
 export default class GameInfo extends React.Component<Props> {
@@ -96,7 +98,7 @@ export default class GameInfo extends React.Component<Props> {
                     </Stack>
                 </PivotItem>
                 <PivotItem headerText='Achievements'>
-                    <Label>TODO</Label>
+                    <AchievementsPanel engine={this.props.achievementsEngine} />
                 </PivotItem>
             </Pivot>
         );

@@ -5,8 +5,10 @@ import ISquareDataInterface, {
 import Levels from './Levels';
 
 export interface GameState {
+    level: IGameLevelInterface;
     won: boolean;
     lost: boolean;
+    flagsUsed: boolean;
     board: ISquareDataInterface[][];
 }
 
@@ -19,6 +21,8 @@ export default class GameEngine {
 
     #mines: Set<string> = new Set();
 
+    #flagsUsed = false;
+
     constructor() {
         this.initialize(this.#level);
     }
@@ -30,6 +34,7 @@ export default class GameEngine {
 
         this.#won = false;
         this.#lost = false;
+        this.#flagsUsed = false;
     }
 
     /**
@@ -198,6 +203,8 @@ export default class GameEngine {
         let newSquares = this.#board.slice();
         newSquares[x][y].displayState = newSquareState;
 
+        this.#flagsUsed = true;
+
         return true;
     }
 
@@ -252,9 +259,11 @@ export default class GameEngine {
 
     get gameState(): GameState {
         return {
+            level: this.#level,
             board: this.#board,
             lost: this.#lost,
             won: this.#won,
+            flagsUsed: this.#flagsUsed,
         };
     }
 }
