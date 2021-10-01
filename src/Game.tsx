@@ -156,6 +156,17 @@ export default class Game extends React.Component<unknown, State> {
     }
 
     /**
+     * Force achievements re-evaluation
+     */
+    #refreshAchievements(): void {
+        this.#achievementsEngine.evaluate(
+            this.#gameEngine.gameState,
+            this.state.timer
+        );
+        this.#achievementsEngine.persist();
+    }
+
+    /**
      * Handles when the game is over
      * @param win Whether the game was won
      */
@@ -208,14 +219,10 @@ export default class Game extends React.Component<unknown, State> {
                 } else if (this.state.game.lost) {
                     this.handleGameOver(false);
                 }
+
+                this.#refreshAchievements();
             });
         }
-
-        this.#achievementsEngine.evaluate(
-            this.#gameEngine.gameState,
-            this.state.timer
-        );
-        this.#achievementsEngine.persist();
     };
 
     /**
@@ -229,14 +236,10 @@ export default class Game extends React.Component<unknown, State> {
         }
 
         if (this.#gameEngine.toggleFlag(x, y)) {
-            this.setState({ game: this.#gameEngine.gameState });
+            this.setState({ game: this.#gameEngine.gameState }, () => {
+                this.#refreshAchievements();
+            });
         }
-
-        this.#achievementsEngine.evaluate(
-            this.#gameEngine.gameState,
-            this.state.timer
-        );
-        this.#achievementsEngine.persist();
     };
 
     /**
@@ -252,14 +255,10 @@ export default class Game extends React.Component<unknown, State> {
                 } else if (this.state.game.lost) {
                     this.handleGameOver(false);
                 }
+
+                this.#refreshAchievements();
             });
         }
-
-        this.#achievementsEngine.evaluate(
-            this.#gameEngine.gameState,
-            this.state.timer
-        );
-        this.#achievementsEngine.persist();
     };
 
     /**
