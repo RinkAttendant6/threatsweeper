@@ -279,6 +279,8 @@ export default class Game extends React.Component<unknown, State> {
         } else {
             this.#stopTimer();
         }
+
+        this.#refreshAchievements();
     };
 
     /**
