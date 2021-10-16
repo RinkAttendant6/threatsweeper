@@ -43,7 +43,16 @@ export default class GameStatus extends React.Component<Props> {
                     </b>{' '}
                     devices powered on
                 </Text>
-                <Text as='p'>
+                <Text
+                    as='p'
+                    style={{
+                        padding: '0 0.5em',
+                        backgroundColor:
+                            this.props.flags > this.props.mines
+                                ? 'pink'
+                                : 'transparent',
+                    }}
+                >
                     <FlagIcon
                         aria-label='Nodes flagged'
                         style={{ marginRight: '0.5em', fontSize: '1.25em' }}
