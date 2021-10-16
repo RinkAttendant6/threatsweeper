@@ -21,6 +21,15 @@ export default class App extends React.Component {
                 <Text as='h1' variant='xxLarge'>
                     Threatsweeper
                 </Text>
+                <a
+                    className='github-fork-ribbon'
+                    href='https://github.com/RinkAttendant6/threatsweeper'
+                    data-ribbon='Fork me on GitHub'
+                    target='_blank'
+                    rel='noreferrer noopener'
+                >
+                    Fork me on GitHub
+                </a>
                 <Game />
             </>
         );
