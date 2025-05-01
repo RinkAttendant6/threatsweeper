@@ -137,7 +137,7 @@ export default class AchievementsEngine {
             Object.entries(savedAchievements).forEach(([name, achievement]) => {
                 if (name in this.#achievements) {
                     this.#achievements[name].achievedOn = new Date(
-                        achievement.achievedOn
+                        achievement.achievedOn,
                     );
                 }
             });
@@ -152,7 +152,7 @@ export default class AchievementsEngine {
     persist(): void {
         const serializableAchievements = Object.fromEntries(
             Object.entries(this.#achievements)
-                .filter(([_, achievement]) => achievement.achievedOn !== null)
+                .filter(([, achievement]) => achievement.achievedOn !== null)
                 .map(([name, achievement]) => {
                     return [
                         name,
@@ -160,12 +160,12 @@ export default class AchievementsEngine {
                             achievedOn: achievement.achievedOn?.toISOString(),
                         },
                     ];
-                })
+                }),
         );
 
         localStorage.setItem(
             'achievements',
-            JSON.stringify(serializableAchievements)
+            JSON.stringify(serializableAchievements),
         );
     }
 
@@ -198,7 +198,7 @@ export default class AchievementsEngine {
                 flatBoard.filter(
                     (square) =>
                         square.displayState === DisplayState.Uncovered ||
-                        square.surroundingMines === -1
+                        square.surroundingMines === -1,
                 ).length <=
                 3
                 ? date
@@ -218,10 +218,10 @@ export default class AchievementsEngine {
         this.#achievements.highValueTarget.achievedOn ||=
             lost &&
             flatBoard.some(
-                (square) => square.displayState === DisplayState.Detonated
+                (square) => square.displayState === DisplayState.Detonated,
             ) &&
             !flatBoard.some(
-                (square) => square.displayState === DisplayState.Uncovered
+                (square) => square.displayState === DisplayState.Uncovered,
             )
                 ? date
                 : null;
@@ -248,21 +248,21 @@ export default class AchievementsEngine {
             flatBoard.some(
                 (square) =>
                     square.displayState === DisplayState.Flagged &&
-                    square.surroundingMines !== -1
+                    square.surroundingMines !== -1,
             )
                 ? date
                 : null;
 
         this.#achievements.bufferOverflow.achievedOn ||=
             flatBoard.filter(
-                (square) => square.displayState === DisplayState.Flagged
+                (square) => square.displayState === DisplayState.Flagged,
             ).length > level.mines
                 ? date
                 : null;
 
         this.#achievements.liveUsb.achievedOn ||=
             flatBoard.filter(
-                (square) => square.displayState === DisplayState.Maybe
+                (square) => square.displayState === DisplayState.Maybe,
             ).length >= 4
                 ? date
                 : null;
@@ -270,7 +270,7 @@ export default class AchievementsEngine {
         this.#achievements.coffeeBreak.achievedOn ||=
             game.paused &&
             flatBoard.some(
-                (square) => square.displayState === DisplayState.Uncovered
+                (square) => square.displayState === DisplayState.Uncovered,
             )
                 ? date
                 : null;

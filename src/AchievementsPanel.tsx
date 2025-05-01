@@ -70,7 +70,7 @@ export default class AchievementsPanel extends React.Component<Props> {
                                                     title={achievement.achievedOn.toISOString()}
                                                 >
                                                     {dateFormatter.format(
-                                                        achievement.achievedOn
+                                                        achievement.achievedOn,
                                                     )}
                                                 </time>
                                             </>

@@ -56,7 +56,7 @@ export default class GameBoard extends React.Component<Props, State> {
         e: KeyboardEvent,
         col: number,
         row: number,
-        direction: NavigationDirection
+        direction: NavigationDirection,
     ): void {
         e.preventDefault();
 
@@ -161,7 +161,7 @@ export default class GameBoard extends React.Component<Props, State> {
                                             e,
                                             x,
                                             y,
-                                            direction
+                                            direction,
                                         )
                                     }
                                     squareState={this.props.squares[x][y]}

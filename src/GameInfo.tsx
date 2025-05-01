@@ -98,7 +98,7 @@ export default class GameInfo extends React.Component<Props> {
                                             }
                                         />
                                     </Stack.Item>
-                                )
+                                ),
                             )}
                         </Stack>
                     </ErrorBoundary>

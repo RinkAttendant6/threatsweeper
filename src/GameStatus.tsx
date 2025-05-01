@@ -38,7 +38,7 @@ export default class GameStatus extends React.Component<Props> {
                             maximumFractionDigits: 1,
                         }).format(
                             this.props.revealed /
-                                (this.props.size - this.props.mines)
+                                (this.props.size - this.props.mines),
                         )}
                     </b>{' '}
                     devices powered on

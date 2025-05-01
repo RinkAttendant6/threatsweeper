@@ -54,7 +54,7 @@ export default class Game extends React.Component<unknown, State> {
             gameInProgress: false,
             scores: JSON.parse(
                 localStorage.getItem('highscores') ??
-                    '{"EASY":[],"MEDIUM":[],"HARD":[]}'
+                    '{"EASY":[],"MEDIUM":[],"HARD":[]}',
             ),
             gameCounters: {
                 won: Number(localStorage.getItem('gamesWon')) || 0,
@@ -139,7 +139,7 @@ export default class Game extends React.Component<unknown, State> {
         };
 
         this.state.game.board.forEach((column) =>
-            column.forEach((cell) => ++boardStatus[cell.displayState])
+            column.forEach((cell) => ++boardStatus[cell.displayState]),
         );
 
         return boardStatus;
@@ -162,7 +162,7 @@ export default class Game extends React.Component<unknown, State> {
     #refreshAchievements(): void {
         this.#achievementsEngine.evaluate(
             this.#gameEngine.gameState,
-            this.state.timer
+            this.state.timer,
         );
         this.#achievementsEngine.persist();
     }
@@ -190,7 +190,7 @@ export default class Game extends React.Component<unknown, State> {
             localStorage.setItem('gamesLost', String(counters.lost));
             localStorage.setItem(
                 'gamesInstantlyLost',
-                String(counters.instantlyLost)
+                String(counters.instantlyLost),
             );
         }
 
@@ -337,14 +337,14 @@ export default class Game extends React.Component<unknown, State> {
                     <GameWonDialog
                         hidden={!this.state.wonDialogOpen}
                         toggleHideDialog={this.handleCloseGameOverDialog.bind(
-                            this
+                            this,
                         )}
                     />
                     <GameLostDialog
                         hidden={!this.state.lostDialogOpen}
                         instantLoss={boardStatus[DisplayState.Uncovered] === 0}
                         toggleHideDialog={this.handleCloseGameOverDialog.bind(
-                            this
+                            this,
                         )}
                     />
                 </>

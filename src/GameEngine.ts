@@ -107,7 +107,7 @@ export default class GameEngine {
     #revealAdjacentSquares(
         squares: ISquareDataInterface[][],
         x: number,
-        y: number
+        y: number,
     ): ISquareDataInterface[][] {
         const { width, height } = this.#level;
 
@@ -169,8 +169,8 @@ export default class GameEngine {
                 column.every(
                     (s) =>
                         s.displayState === DisplayState.Uncovered ||
-                        s.surroundingMines === -1
-                )
+                        s.surroundingMines === -1,
+                ),
             );
 
             if (won) {
@@ -196,7 +196,7 @@ export default class GameEngine {
         }
 
         let currentSquareStateIdx = stateTransitions.indexOf(
-            this.#board[x][y].displayState
+            this.#board[x][y].displayState,
         );
 
         let newSquareStateIdx: number =
@@ -237,11 +237,11 @@ export default class GameEngine {
         });
 
         const adjacentMaybe = adjacentSquares.filter(
-            ([v, h]) => this.#board[v][h].displayState === DisplayState.Maybe
+            ([v, h]) => this.#board[v][h].displayState === DisplayState.Maybe,
         );
 
         const adjacentFlags = adjacentSquares.filter(
-            ([v, h]) => this.#board[v][h].displayState === DisplayState.Flagged
+            ([v, h]) => this.#board[v][h].displayState === DisplayState.Flagged,
         );
 
         if (
@@ -252,7 +252,7 @@ export default class GameEngine {
         }
 
         const adjacentCoveredSquares = adjacentSquares.filter(
-            ([v, h]) => this.#board[v][h].displayState === DisplayState.Covered
+            ([v, h]) => this.#board[v][h].displayState === DisplayState.Covered,
         );
 
         adjacentCoveredSquares.forEach(([v, h]) => this.uncover(v, h));

@@ -55,7 +55,7 @@ export default class LevelSelectorPanel extends React.Component<Props> {
                         <TooltipHost
                             key={level}
                             tooltipProps={this.#getLevelDescriptionTooltipProps(
-                                level as LevelName
+                                level as LevelName,
                             )}
                         >
                             <DefaultButton
@@ -63,7 +63,7 @@ export default class LevelSelectorPanel extends React.Component<Props> {
                                 value={level}
                                 onClick={() =>
                                     this.props.newGameCallback(
-                                        level as LevelName
+                                        level as LevelName,
                                     )
                                 }
                             >
